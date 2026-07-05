@@ -9,6 +9,7 @@ RUN apt-get update \
 WORKDIR /app
 
 COPY package.json package-lock.json ./
+COPY scripts ./scripts
 RUN npm ci
 
 COPY tsconfig.json ./
@@ -29,6 +30,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY package.json package-lock.json ./
+COPY scripts ./scripts
 RUN npm ci --omit=dev
 
 COPY --from=builder /app/dist ./dist

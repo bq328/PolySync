@@ -17,7 +17,7 @@
     "dev:dashboard": "npm run dev --prefix dashboard",
     "lint": "tsc --noEmit",
     "test": "vitest run",
-    "postinstall": "tsx scripts/patch-polymarket-client.mts",
+    "postinstall": "node scripts/patch-polymarket-client.mjs",
     "audit": "npm audit --audit-level=critical",
     "docker:build": "docker build -t polysync:1.0.0 .",
     "place-order": "tsx scripts/place-order.mts"

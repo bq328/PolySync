@@ -1,5 +1,5 @@
 /**
- * Patches @polymarket/client for PolyMirror deposit-wallet + env CLOB credentials.
+ * Patches @polymarket/client for PolySync deposit-wallet + env CLOB credentials.
  *
  * 1. classifyWalletType — relayer-deployed wallets via globalThis.__POLYMIRROR_RELAYER_WALLETS__
  * 2. beginAuthentication — trust .env credentials when L2 fetchApiKeys succeeds (skip includes check)
@@ -26,36 +26,30 @@ const CREDENTIALS_MARKER = "POLYMIRROR_TRUST_ENV_CREDENTIALS";
 
 /**
  * Explicit, documented escape hatch. When the SDK version legitimately changes
- * and the needles need updating, an operator can set this to unblock installs —
- * but the default is to FAIL LOUDLY so drift is never silently ignored.
+ * and the needles need updating, an operator can set this to unblock installs,
+ * but the default is to fail loudly so drift is never silently ignored.
  */
 const ALLOW_UNPATCHED = process.env.POLYMIRROR_ALLOW_UNPATCHED_SDK === "1";
 
 class SdkPatchError extends Error {}
 
-function patchOnce(
-  path: string,
-  label: string,
-  needle: string,
-  replacement: string,
-  appliedMarker: string
-): boolean {
+function patchOnce(path, label, needle, replacement, appliedMarker) {
   if (!existsSync(path)) {
     throw new SdkPatchError(
-      `${label} not found at ${path} — @polymarket/client is a required dependency. ` +
+      `${label} not found at ${path} - @polymarket/client is a required dependency. ` +
         `Run "npm install" to install it before patching.`
     );
   }
   const src = readFileSync(path, "utf8");
   if (src.includes(appliedMarker) || src.includes(replacement)) {
-    // Already patched (idempotent) — checked before the needle so re-running on
+    // Already patched (idempotent) - checked before the needle so re-running on
     // a working tree never fails.
     return false;
   }
   if (!src.includes(needle)) {
     throw new SdkPatchError(
-      `${label}: patch target not found — @polymarket/client likely changed version. ` +
-        `Update the needle in scripts/patch-polymarket-client.mts to match the new SDK build, ` +
+      `${label}: patch target not found - @polymarket/client likely changed version. ` +
+        `Update the needle in scripts/patch-polymarket-client.mjs to match the new SDK build, ` +
         `then verify the change is still correct. ` +
         `To bypass intentionally (NOT recommended), set POLYMIRROR_ALLOW_UNPATCHED_SDK=1.`
     );
@@ -65,7 +59,7 @@ function patchOnce(
   return true;
 }
 
-function main(): void {
+function main() {
   try {
     patchOnce(
       chunkPath,
