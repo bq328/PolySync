@@ -1,5 +1,5 @@
 services:
-  polymirror:
+  polysync:
     build: .
     restart: unless-stopped
     ports:

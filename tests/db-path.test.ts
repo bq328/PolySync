@@ -1,4 +1,7 @@
 import { describe, it, expect } from "vitest";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { resolveDbPath, resolveAccountDbPath } from "../src/state/db-path.js";
 
 describe("resolveDbPath", () => {
@@ -17,6 +20,16 @@ describe("resolveAccountDbPath", () => {
   });
 
   it("uses legacy preview path for default when it exists", () => {
-    expect(resolveAccountDbPath("default", true)).toBe("data/preview.db");
+    const cwd = process.cwd();
+    const dir = mkdtempSync(join(tmpdir(), "polysync-db-path-"));
+    process.chdir(dir);
+    mkdirSync("data", { recursive: true });
+    writeFileSync("data/preview.db", "");
+    try {
+      expect(resolveAccountDbPath("default", true)).toBe("data/preview.db");
+    } finally {
+      process.chdir(cwd);
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });

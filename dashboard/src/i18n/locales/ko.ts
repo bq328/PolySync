@@ -379,7 +379,7 @@ export const ko: Messages = {
     hintLiveNoFunds: "Live 모드이지만 USDC/pUSD가 없습니다. Proxy에 입금하고 Polymarket에서 입금을 완료하세요.",
     clobAvailable: "CLOB 사용 가능",
     chainPusd: "온체인 pUSD",
-    hintClobCacheDesync: "CLOB shows $0 due to Polymarket backend cache lag (on-chain ~{amount} pUSD is approved). If you can trade on the website, PolyMirror Live will attempt copies using on-chain balance; CLOB may still display $0.",
+    hintClobCacheDesync: "CLOB shows $0 due to Polymarket backend cache lag (on-chain ~{amount} pUSD is approved). If you can trade on the website, PolySync Live will attempt copies using on-chain balance; CLOB may still display $0.",
     hintGeoblock: "CLOB region block: exit IP {ip} ({country}/{region}) is geoblocked. Live copies are skipped. Use a residential proxy in an allowed region (typically US) and ensure config.yaml proxy applies to all CLOB/Relayer traffic.",
     editTitle: "Edit account · {id}",
     editHint: "Account ID cannot be changed. Leave private key blank to keep it; entering a new key updates local .env.",

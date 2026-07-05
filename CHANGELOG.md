@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to PolyMirror are documented here.
+All notable changes to PolySync are documented here.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -39,5 +39,5 @@ First stable release — single-platform Polymarket multi-leader copy trading (m
 
 Initial development scaffold (M1 preview loop).
 
-[1.0.0]: https://github.com/your-org/PolyMirror/releases/tag/v1.0.0
-[0.1.0]: https://github.com/your-org/PolyMirror/releases/tag/v0.1.0
+[1.0.0]: https://github.com/bq328/PolySync/releases/tag/v1.0.0
+[0.1.0]: https://github.com/bq328/PolySync/releases/tag/v0.1.0

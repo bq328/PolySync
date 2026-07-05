@@ -384,7 +384,7 @@ export const en: Messages = {
     hintClobChainMismatch:
       "Proxy wallet has ~{amount} pUSD on-chain but CLOB trading balance is $0 (common after V2 migration: missing approval or stale cache). Log in to polymarket.com with the same Proxy wallet and place any small trade to activate approvals; if the site shows balance but orders still fail, open Deposit to confirm funds are in the trading account. Live copy trades are skipped until CLOB syncs.",
     hintClobCacheDesync:
-      "CLOB shows $0 due to Polymarket backend cache lag (on-chain ~{amount} pUSD is approved). If you can trade on the website, PolyMirror Live will attempt copies using on-chain balance; CLOB may still display $0.",
+      "CLOB shows $0 due to Polymarket backend cache lag (on-chain ~{amount} pUSD is approved). If you can trade on the website, PolySync Live will attempt copies using on-chain balance; CLOB may still display $0.",
     hintGeoblock:
       "CLOB region block: exit IP {ip} ({country}/{region}) is geoblocked. Live copies are skipped. Use a residential proxy in an allowed region (typically US) and ensure config.yaml proxy applies to all CLOB/Relayer traffic.",
     hintLiveNoFunds:

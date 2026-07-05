@@ -8,7 +8,7 @@ export const LOCALES: { id: Locale; label: string; native: string }[] = [
   { id: "ko", label: "한국어", native: "한국어" },
 ];
 
-const STORAGE_KEY = "polymirror_locale";
+const STORAGE_KEY = "polysync_locale";
 
 export function getStoredLocale(): Locale | null {
   try {

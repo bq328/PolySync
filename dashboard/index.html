@@ -8,7 +8,7 @@
     <script>
       (function () {
         try {
-          var tk = "polymirror_theme";
+          var tk = "polysync_theme";
           var t = localStorage.getItem(tk);
           if (t !== "light" && t !== "dark") {
             t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
@@ -19,7 +19,7 @@
           if (meta) meta.setAttribute("content", t === "light" ? "#f1f5f9" : "#06080f");
         } catch (e) {}
         try {
-          var lk = "polymirror_locale";
+          var lk = "polysync_locale";
           var loc = localStorage.getItem(lk);
           var supported = { zh: 1, en: 1, "zh-TW": 1, ja: 1, ko: 1 };
           if (!supported[loc]) {
@@ -42,7 +42,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <title>PolyMirror Dashboard</title>
+    <title>PolySync Dashboard</title>
   </head>
   <body>
     <div id="root"></div>

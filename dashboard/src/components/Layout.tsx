@@ -161,7 +161,7 @@ export function Layout() {
         <div className="sidebar-brand">
           <IconLogo className="sidebar-logo" width={32} height={32} />
           <div>
-            <div className="sidebar-brand-name">PolyMirror</div>
+            <div className="sidebar-brand-name">PolySync</div>
             <div className="sidebar-brand-tag">{t("layout.tagline")}</div>
           </div>
         </div>

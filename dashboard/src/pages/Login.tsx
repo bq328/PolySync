@@ -71,7 +71,7 @@ export function LoginPage() {
         <div className="login-brand">
           <IconLogo width={40} height={40} />
           <div>
-            <h1>PolyMirror</h1>
+            <h1>PolySync</h1>
             <p className="login-tagline">{t("login.tagline")}</p>
           </div>
         </div>

@@ -1,5 +1,5 @@
-const TOKEN_KEY = "polymirror_dashboard_token";
-const ACCOUNT_KEY = "polymirror_active_account";
+const TOKEN_KEY = "polysync_dashboard_token";
+const ACCOUNT_KEY = "polysync_active_account";
 
 export function getToken(): string | null {
   return sessionStorage.getItem(TOKEN_KEY);

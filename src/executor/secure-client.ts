@@ -1,5 +1,10 @@
 import { Wallet } from "ethers";
-import { createSecureClient, relayerApiKey, type SecureClient } from "@polymarket/client";
+import {
+  createSecureClient,
+  relayerApiKey,
+  type SecureClient,
+} from "@polymarket/client";
+import { ApiKeyCredsSchema } from "@polymarket/bindings/clob";
 import { signerFrom } from "@polymarket/client/ethers-v5";
 import type { WalletConfig } from "../config/types.js";
 import { fetchPusdAllowancesReady } from "./balance.js";
@@ -91,11 +96,11 @@ export async function getSecureClient(wallet: WalletConfig): Promise<SecureClien
 
     let clobCredentials =
       wallet.apiKey && wallet.apiSecret && wallet.apiPassphrase
-        ? {
-            key: wallet.apiKey,
+        ? ApiKeyCredsSchema.parse({
+            apiKey: wallet.apiKey,
             secret: wallet.apiSecret,
             passphrase: wallet.apiPassphrase,
-          }
+          })
         : undefined;
 
     if (!clobCredentials && isDepositWallet) {
@@ -117,9 +122,8 @@ export async function getSecureClient(wallet: WalletConfig): Promise<SecureClien
       }
     }
 
-    const client = await createSecureClient({
+    const secureClientOptions = {
       signer,
-      ...(clobCredentials ? { credentials: clobCredentials } : {}),
       ...(hasRelayer
         ? {
             apiKey: relayerApiKey({
@@ -129,7 +133,13 @@ export async function getSecureClient(wallet: WalletConfig): Promise<SecureClien
           }
         : {}),
       ...(mode === "settings" ? { wallet: wallet.proxyAddress } : {}),
-    });
+    };
+
+    const client = await createSecureClient(
+      clobCredentials
+        ? { ...secureClientOptions, credentials: clobCredentials }
+        : secureClientOptions
+    );
 
     const accountWallet = client.account.wallet.toLowerCase();
     const configured = wallet.proxyAddress.toLowerCase();

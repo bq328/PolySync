@@ -1,10 +1,10 @@
-# PolyMirror
+# PolySync
 
-**Multi-leader copy trading on Polymarket** — mirror trades from multiple leader wallets with per-leader sizing, conflict resolution, and risk controls.
+**Multi-leader trade sync on Polymarket** — mirror trades from multiple leader wallets with per-leader sizing, conflict resolution, and risk controls.
 
 **Polymarket 多 Leader 镜像跟单引擎** — 按 Leader 独立策略缩放仓位，统一风控、去重与冲突处理。
 
-[![CI](https://github.com/your-org/PolyMirror/actions/workflows/ci.yml/badge.svg)](https://github.com/your-org/PolyMirror/actions/workflows/ci.yml)
+[![CI](https://github.com/bq328/PolySync/actions/workflows/ci.yml/badge.svg)](https://github.com/bq328/PolySync/actions/workflows/ci.yml)
 
 **Version 1.0.0** — single-platform Polymarket multi-leader copy trading (mode A).
 
@@ -38,7 +38,7 @@
 ### Local (preview recommended)
 
 ```bash
-git clone <repo-url> PolyMirror && cd PolyMirror
+git clone https://github.com/bq328/PolySync.git PolySync && cd PolySync
 npm install
 cp .env.example .env
 cp config.preview.template.yaml config.yaml
@@ -64,12 +64,12 @@ docker compose logs -f
 Or manual build:
 
 ```bash
-docker build -t polymirror:1.0.0 .
+docker build -t polysync:1.0.0 .
 docker run --rm -p 8080:8080 \
   -v "$PWD/config.yaml:/app/config.yaml:ro" \
   -v "$PWD/data:/app/data" \
   --env-file .env \
-  polymirror:1.0.0
+  polysync:1.0.0
 ```
 
 ---
@@ -198,3 +198,5 @@ docs/          Architecture, runbook, security, checklist
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+PolySync is based on the original PolyMirror project and keeps the MIT license notice.

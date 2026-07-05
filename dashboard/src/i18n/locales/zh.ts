@@ -386,7 +386,7 @@ export const zh: Messages = {
     hintClobChainMismatch:
       "Proxy 链上有约 {amount} pUSD，但 CLOB 交易余额为 $0，且链上授权尚未完成。请登录 polymarket.com，用同一 Proxy 钱包完成任意一笔小额交易以激活 pUSD 授权。同步完成前 Live 跟单会被跳过。",
     hintClobCacheDesync:
-      "CLOB 显示 $0 是 Polymarket 后端缓存未同步（链上已有约 {amount} pUSD 且已授权）。你在官网已能下单；PolyMirror Live 将使用链上余额尝试跟单，CLOB 数字可能仍为 0。",
+      "CLOB 显示 $0 是 Polymarket 后端缓存未同步（链上已有约 {amount} pUSD 且已授权）。你在官网已能下单；PolySync Live 将使用链上余额尝试跟单，CLOB 数字可能仍为 0。",
     hintGeoblock:
       "CLOB 地区限制：当前出口 IP {ip}（{country}/{region}）被 Polymarket geoblock，Live 跟单会被跳过。请换美国等允许地区的 residential 代理，并确认 config.yaml 代理对所有 CLOB/Relayer 请求生效。",
     hintLiveNoFunds:

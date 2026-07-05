@@ -8,7 +8,7 @@
 import { Wallet, utils } from "ethers";
 import { createPublicClient, type ApiKeyCreds } from "@polymarket/client";
 import { createOrDeriveApiKey } from "@polymarket/client/actions";
-import type { EvmSignature } from "@polymarket/types";
+import { expectEvmAddress, type EvmSignature } from "@polymarket/types";
 import { ensureUndiciGlobalProxy } from "../util/proxy.js";
 
 const CLOBAUTH_TYPE_STRING =
@@ -90,9 +90,10 @@ export async function deriveDepositWalletClobCredentials(
 ): Promise<ApiKeyCreds> {
   await ensureUndiciGlobalProxy();
   const wallet = new Wallet(privateKey);
+  const depositWalletAddress = expectEvmAddress(depositWallet);
   const timestamp = Math.floor(Date.now() / 1000);
   const clobAuthMessage = {
-    address: depositWallet,
+    address: depositWalletAddress,
     timestamp: String(timestamp),
     nonce,
     message: "This message attests that I control the given wallet",
@@ -114,7 +115,7 @@ export async function deriveDepositWalletClobCredentials(
       name: DEPOSIT_WALLET_NAME,
       version: "1",
       chainId,
-      verifyingContract: depositWallet,
+      verifyingContract: depositWalletAddress,
       salt: BYTES32_ZERO,
     },
   };
@@ -134,7 +135,7 @@ export async function deriveDepositWalletClobCredentials(
 
   const client = createPublicClient();
   return createOrDeriveApiKey(client, {
-    address: depositWallet,
+    address: depositWalletAddress,
     nonce,
     signature: wrapped as EvmSignature,
     timestamp,

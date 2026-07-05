@@ -1,6 +1,6 @@
 export type Theme = "light" | "dark";
 
-const STORAGE_KEY = "polymirror_theme";
+const STORAGE_KEY = "polysync_theme";
 
 export function getStoredTheme(): Theme | null {
   try {

@@ -1,11 +1,12 @@
 {
-  "name": "polymirror",
+  "name": "polysync",
   "version": "1.0.0",
-  "description": "Multi-leader copy trading on Polymarket",
+  "description": "Multi-leader trade sync on Polymarket",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "polymirror": "dist/index.js"
+    "polysync": "dist/index.js",
+    "PolySync": "dist/index.js"
   },
   "scripts": {
     "build": "tsc && npm run build:dashboard",
@@ -18,7 +19,7 @@
     "test": "vitest run",
     "postinstall": "tsx scripts/patch-polymarket-client.mts",
     "audit": "npm audit --audit-level=critical",
-    "docker:build": "docker build -t polymirror:1.0.0 .",
+    "docker:build": "docker build -t polysync:1.0.0 .",
     "place-order": "tsx scripts/place-order.mts"
   },
   "keywords": [

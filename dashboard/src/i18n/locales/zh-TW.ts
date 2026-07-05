@@ -379,7 +379,7 @@ export const zhTW: Messages = {
     hintLiveNoFunds: "Live 模式已啟用，但 Polymarket 帳戶暫無可用 USDC/pUSD。請向 Proxy 地址充值並在官網完成入金。",
     clobAvailable: "CLOB 可用",
     chainPusd: "鏈上 pUSD",
-    hintClobCacheDesync: "CLOB 顯示 $0 是 Polymarket 后端缓存未同步（鏈上已有约 {amount} pUSD 且已授权）。你在官网已能下单；PolyMirror Live 将使用鏈上余额尝试跟單，CLOB 数字可能仍为 0。",
+    hintClobCacheDesync: "CLOB 顯示 $0 是 Polymarket 后端缓存未同步（鏈上已有约 {amount} pUSD 且已授权）。你在官网已能下单；PolySync Live 将使用鏈上余额尝试跟單，CLOB 数字可能仍为 0。",
     hintGeoblock: "CLOB 地区限制：目前出口 IP {ip}（{country}/{region}）被 Polymarket geoblock，Live 跟單会被跳過。请换美国等允许地区的 residential 代理，并确认 config.yaml 代理对所有 CLOB/Relayer 请求生效。",
     editTitle: "編輯帳戶 · {id}",
     editHint: "帳戶 ID 不可修改。私钥留空则保持不变；填寫新私钥将更新本地 .env。",
