@@ -14,6 +14,7 @@ RUN npm ci
 
 COPY tsconfig.json ./
 COPY src ./src
+COPY docs ./docs
 COPY dashboard/package.json dashboard/package-lock.json ./dashboard/
 RUN cd dashboard && npm ci
 COPY dashboard ./dashboard
