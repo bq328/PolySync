@@ -9,10 +9,12 @@ import {
   buildSettingsSnapshot,
   patchGlobalSettings,
   patchTelegramSettings,
+  configureLiveConfirm,
   resetKillSwitch,
   setPreviewMode,
   stopCopyTrading,
   testProxyConnection,
+  testLiveConnection,
 } from "./settings.js";
 import {
   leaderPatchSchema,
@@ -149,6 +151,16 @@ export async function handleApiRequest(
     return testProxyConnection(actx.getConfig().wallet.dataApiUrl);
   }
 
+  if (pathname === "/api/settings/live-confirm" && method === "POST") {
+    const actx = ctx.manager.toApiContext(searchParams.get("accountId"));
+    return configureLiveConfirm(ctx, actx);
+  }
+
+  if (pathname === "/api/settings/live/test" && method === "POST") {
+    const actx = ctx.manager.toApiContext(searchParams.get("accountId"));
+    return testLiveConnection(actx);
+  }
+
   if (pathname === "/api/settings/telegram" && method === "PATCH") {
     return patchTelegramSettings(body);
   }
@@ -195,6 +207,14 @@ export async function handleApiRequest(
 
   if (path === "/api/settings/proxy/test" && method === "POST") {
     return testProxyConnection(actx.getConfig().wallet.dataApiUrl);
+  }
+
+  if (path === "/api/settings/live-confirm" && method === "POST") {
+    return configureLiveConfirm(ctx, actx);
+  }
+
+  if (path === "/api/settings/live/test" && method === "POST") {
+    return testLiveConnection(actx);
   }
 
   const orderCancelMatch = path.match(/^\/api\/orders\/([^/]+)\/cancel$/);

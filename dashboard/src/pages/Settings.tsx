@@ -2,11 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   fetchSettings,
+  configureLiveConfirm,
   patchGlobalSettings,
   patchTelegramSettings,
   reloadConfig,
   switchLiveMode,
   switchPreviewMode,
+  testLiveConnection,
   testProxyConnection,
   type SettingsSnapshot,
 } from "../api/settings";
@@ -167,6 +169,31 @@ export function SettingsPage() {
         setErr(null);
       } else {
         setErr([r.error, r.hint].filter(Boolean).join(" — "));
+      }
+    },
+    onError: (e: Error) => setErr(e.message),
+  });
+
+  const saveLiveConfirm = useMutation({
+    mutationFn: configureLiveConfirm,
+    onSuccess: (r) => {
+      toast(translateApiMessage(t, r.message), "success");
+      setErr(null);
+      queryClient.invalidateQueries({ queryKey: ["settings"] });
+      queryClient.invalidateQueries({ queryKey: ["status"] });
+    },
+    onError: (e: Error) => setErr(e.message),
+  });
+
+  const testLive = useMutation({
+    mutationFn: testLiveConnection,
+    onSuccess: (r) => {
+      const details = r.checks.map((c) => `${c.ok ? "OK" : "FAIL"} ${c.message}`).join(" / ");
+      if (r.ok) {
+        toast(translateApiMessage(t, r.message), "success");
+        setErr(null);
+      } else {
+        setErr(`${translateApiMessage(t, r.message)} — ${details}`);
       }
     },
     onError: (e: Error) => setErr(e.message),
@@ -716,6 +743,26 @@ export function SettingsPage() {
               </div>
             )}
             <div className="form-actions">
+              <button
+                type="button"
+                className="secondary"
+                disabled={saveLiveConfirm.isPending || data.env.liveConfirmSet}
+                onClick={() => saveLiveConfirm.mutate()}
+              >
+                {saveLiveConfirm.isPending
+                  ? t("settings.saving")
+                  : data.env.liveConfirmSet
+                    ? t("settings.liveConfirmConfigured")
+                    : t("settings.configureLiveConfirm")}
+              </button>
+              <button
+                type="button"
+                className="secondary"
+                disabled={testLive.isPending}
+                onClick={() => testLive.mutate()}
+              >
+                {testLive.isPending ? t("settings.testingLive") : t("settings.testLive")}
+              </button>
               <button
                 type="button"
                 className="secondary"

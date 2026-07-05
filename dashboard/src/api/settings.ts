@@ -127,6 +127,31 @@ export interface ProxyTestResult {
 export const testProxyConnection = () =>
   apiPost<ProxyTestResult>("/api/settings/proxy/test", {});
 
+export interface LiveConfirmResult {
+  ok: boolean;
+  key: string;
+  message: string;
+  settings: SettingsSnapshot;
+}
+
+export const configureLiveConfirm = () =>
+  apiPost<LiveConfirmResult>("/api/settings/live-confirm", {});
+
+export interface LiveConnectionCheck {
+  name: string;
+  ok: boolean;
+  message: string;
+}
+
+export interface LiveConnectionTestResult {
+  ok: boolean;
+  message: string;
+  checks: LiveConnectionCheck[];
+}
+
+export const testLiveConnection = () =>
+  apiPost<LiveConnectionTestResult>("/api/settings/live/test", {});
+
 export interface TelegramPatchResult {
   ok: boolean;
   telegramConfigured: boolean;

@@ -12,7 +12,7 @@ import {
 import { readNormalizedConfigDocument, writeNormalizedConfigDocument } from "../config/write.js";
 import { applyEnvToProcess, upsertEnvFile } from "../config/env-file.js";
 import { accountMergedGlobal } from "../config/document.js";
-import { readLiveConfirm } from "../config/env.js";
+import { liveConfirmEnvName, readLiveConfirm } from "../config/env.js";
 import { assertLiveTradingAllowed } from "../engine/risk.js";
 import { logInfo } from "../notify/logger.js";
 import {
@@ -23,6 +23,9 @@ import {
   maskProxyUrl,
 } from "../util/proxy.js";
 import { getActivity } from "../monitor/data-api.js";
+import { fetchGeoblockStatus } from "../executor/geoblock.js";
+import { getSecureClient } from "../executor/secure-client.js";
+import { fetchWalletCollateral } from "../executor/balance.js";
 import {
   flushLivePendingBeforePreview,
   migratePreviewToLiveDb,
@@ -226,6 +229,109 @@ export async function testProxyConnection(
         hint: isProxyConfigured()
           ? "代理连接失败，请检查地址、端口或认证信息"
           : "未配置代理。请在「设置 → 网络」选择固定 IP 或动态 IP 代理",
+      },
+    };
+  }
+}
+
+export async function configureLiveConfirm(
+  root: ApiContext,
+  actx: AccountApiContext
+): Promise<{ status: number; body: unknown }> {
+  try {
+    const key = liveConfirmEnvName();
+    const updates = { [key]: "I_UNDERSTAND_LIVE_TRADING" };
+    upsertEnvFile(updates);
+    applyEnvToProcess(updates);
+    logInfo("Live confirmation env configured via dashboard", { accountId: actx.accountId });
+    return {
+      status: 200,
+      body: {
+        ok: true,
+        key,
+        message: `${key} 已写入 .env`,
+        settings: buildSettingsSnapshot(root, actx),
+      },
+    };
+  } catch (e) {
+    return formatSettingsError(e);
+  }
+}
+
+export async function testLiveConnection(
+  actx: AccountApiContext
+): Promise<{ status: number; body: unknown }> {
+  const config = actx.getConfig();
+  const checks: Array<{ name: string; ok: boolean; message: string }> = [];
+  const add = (name: string, ok: boolean, message: string) => checks.push({ name, ok, message });
+
+  try {
+    const liveConfirm = readLiveConfirm() === "I_UNDERSTAND_LIVE_TRADING";
+    add(
+      "liveConfirm",
+      liveConfirm,
+      liveConfirm ? "实盘确认已配置" : `${liveConfirmEnvName()} 未配置`
+    );
+    if (!liveConfirm) {
+      return {
+        status: 200,
+        body: { ok: false, checks, message: "实盘确认未配置" },
+      };
+    }
+
+    await getActivity(
+      config.wallet.dataApiUrl,
+      {
+        user: "0x0000000000000000000000000000000000000001",
+        limit: 1,
+        offset: 0,
+        type: "TRADE",
+        sortBy: "TIMESTAMP",
+        sortDirection: "DESC",
+      },
+      config.app.global.execution.networkRetryLimit
+    );
+    add("dataApi", true, "Data API 可连接");
+
+    const geo = await fetchGeoblockStatus();
+    if (geo?.blocked) {
+      add("geoblock", false, `Polymarket 限制当前出口：${geo.country ?? "unknown"}`);
+    } else {
+      add("geoblock", true, geo ? `出口可用：${geo.country ?? "unknown"}` : "地理限制检查无返回，继续");
+    }
+
+    const client = await getSecureClient(config.wallet);
+    add(
+      "secureClient",
+      true,
+      `SecureClient 已连接：${maskAddress(client.account.wallet)}`
+    );
+
+    const collateral = await fetchWalletCollateral(config.wallet);
+    add(
+      "walletBalance",
+      true,
+      `钱包余额读取成功：$${collateral.cashUsd?.toFixed(2) ?? "unknown"} (${collateral.source})`
+    );
+
+    const ok = checks.every((c) => c.ok);
+    return {
+      status: 200,
+      body: {
+        ok,
+        checks,
+        message: ok ? "实盘连接自检通过（未下单）" : "实盘连接自检存在阻塞项",
+      },
+    };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    checks.push({ name: "error", ok: false, message: msg });
+    return {
+      status: 200,
+      body: {
+        ok: false,
+        checks,
+        message: "实盘连接自检失败（未下单）",
       },
     };
   }
