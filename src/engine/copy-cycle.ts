@@ -138,7 +138,7 @@ export async function runCopyCycle(
 
   const pendingOrders = store.countPendingOrders();
 
-  const pollResults = await pollLeaders(registry, config.app.global);
+  const pollResults = await pollLeaders(registry, config.app.global, config.wallet.dataApiUrl);
   const rawQueue: QueuedTrade[] = [];
 
   for (const result of pollResults) {

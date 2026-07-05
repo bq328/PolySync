@@ -1,6 +1,4 @@
-import type { Activity as SdkActivity, ClobTradeActivity } from "@polymarket/bindings/data";
-import { ActivityType as SdkActivityType } from "@polymarket/bindings/data";
-import { getPublicClient } from "../sdk/public-client.js";
+import { fetchJsonWithRetry } from "../util/fetch.js";
 
 export type ActivityType =
   | "TRADE"
@@ -30,6 +28,7 @@ export interface Activity {
 }
 
 export interface GetActivityParams {
+  baseUrl?: string;
   user: string;
   limit?: number;
   offset?: number;
@@ -47,38 +46,50 @@ function num(v: unknown): number {
   return 0;
 }
 
-function mapSdkActivity(raw: SdkActivity): Activity {
+function str(v: unknown): string | undefined {
+  return typeof v === "string" && v.trim() ? v : undefined;
+}
+
+function mapActivity(raw: Record<string, unknown>): Activity {
   const base: Activity = {
-    proxyWallet: "wallet" in raw ? String(raw.wallet ?? "") : undefined,
-    timestamp: Number(raw.timestamp ?? 0),
-    transactionHash: raw.transactionHash ? String(raw.transactionHash) : undefined,
-    type: String(raw.type) as ActivityType,
+    proxyWallet: str(raw.wallet),
+    timestamp: num(raw.timestamp),
+    transactionHash: str(raw.transactionHash) ?? str(raw.transaction_hash),
+    type: String(raw.type ?? "") as ActivityType,
   };
 
-  if (raw.type !== SdkActivityType.TRADE) return base;
-
-  const trade = raw as ClobTradeActivity;
+  if (base.type !== "TRADE") return base;
   return {
     ...base,
-    type: "TRADE",
-    size: num(trade.shares),
-    usdcSize: num(trade.amount),
-    price: num(trade.price),
-    asset: trade.tokenId ? String(trade.tokenId) : undefined,
-    side: trade.side as "BUY" | "SELL",
-    conditionId: trade.conditionId ? String(trade.conditionId) : undefined,
-    outcomeIndex: trade.outcomeIndex ?? undefined,
-    title: trade.title ?? undefined,
-    slug: trade.slug ?? undefined,
-    eventSlug: trade.eventSlug ?? undefined,
-    outcome: trade.outcome ?? undefined,
+    size: num(raw.shares ?? raw.size),
+    usdcSize: num(raw.amount ?? raw.usdcSize ?? raw.usdc_size),
+    price: num(raw.price),
+    asset: str(raw.asset) ?? str(raw.tokenId) ?? str(raw.token_id),
+    side: String(raw.side ?? "") as "BUY" | "SELL",
+    conditionId: str(raw.conditionId) ?? str(raw.condition_id),
+    outcomeIndex:
+      typeof raw.outcomeIndex === "number"
+        ? raw.outcomeIndex
+        : typeof raw.outcome_index === "number"
+          ? raw.outcome_index
+          : undefined,
+    title: str(raw.title),
+    slug: str(raw.slug),
+    eventSlug: str(raw.eventSlug) ?? str(raw.event_slug),
+    outcome: str(raw.outcome),
   };
 }
 
-/** @deprecated base URL ignored — uses @polymarket/client listActivity */
 export function buildActivityUrl(base: string, params: GetActivityParams): string {
-  void base;
-  return `sdk:listActivity?user=${params.user}`;
+  const root = (base || "https://data-api.polymarket.com").replace(/\/$/, "");
+  const url = new URL(`${root}/activity`);
+  url.searchParams.set("user", params.user);
+  if (params.type) url.searchParams.set("type", params.type);
+  if (params.sortBy) url.searchParams.set("sortBy", params.sortBy);
+  if (params.sortDirection) url.searchParams.set("sortDirection", params.sortDirection);
+  url.searchParams.set("limit", String(Math.min(500, params.limit ?? 100)));
+  url.searchParams.set("offset", String(params.offset ?? 0));
+  return url.toString();
 }
 
 function isRetryableActivityError(e: Error): boolean {
@@ -91,37 +102,25 @@ function sleep(ms: number): Promise<void> {
 }
 
 async function fetchActivityPage(params: GetActivityParams): Promise<Activity[]> {
-  const client = await getPublicClient();
-  const pageSize = Math.min(500, params.limit ?? 100);
-  const paginator = client.listActivity({
-    user: params.user,
-    pageSize,
-    ...(params.type ? { type: [params.type as SdkActivityType] } : {}),
-    ...(params.sortBy ? { sortBy: params.sortBy } : {}),
-    ...(params.sortDirection ? { sortDirection: params.sortDirection } : {}),
-  });
-
-  const first = await paginator.firstPage();
-  let items = first.items.map(mapSdkActivity);
-
-  if (params.offset && params.offset > 0) {
-    items = items.slice(params.offset);
+  const url = buildActivityUrl(params.baseUrl ?? "", params);
+  const rows = await fetchJsonWithRetry<unknown>(url, { timeoutMs: 15_000 });
+  if (!Array.isArray(rows)) {
+    throw new Error(`Unexpected Data API response: ${url}`);
   }
-
-  return items;
+  return rows
+    .filter((row): row is Record<string, unknown> => Boolean(row) && typeof row === "object")
+    .map(mapActivity);
 }
 
 export async function getActivity(
-  _base: string,
+  base: string,
   params: GetActivityParams,
   networkRetryLimit = 0
 ): Promise<Activity[]> {
-  void _base;
-
   let lastError: Error | undefined;
   for (let attempt = 0; attempt <= networkRetryLimit; attempt++) {
     try {
-      return await fetchActivityPage(params);
+      return await fetchActivityPage({ ...params, baseUrl: base });
     } catch (e) {
       lastError = e instanceof Error ? e : new Error(String(e));
       if (attempt < networkRetryLimit && isRetryableActivityError(lastError)) {
