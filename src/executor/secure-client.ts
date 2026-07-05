@@ -1,4 +1,3 @@
-import { Wallet } from "ethers";
 import {
   createSecureClient,
   relayerApiKey,
@@ -15,6 +14,7 @@ import {
 import { deriveDepositWalletClobCredentials } from "./deposit-wallet-clob-auth.js";
 import { logInfo, logError } from "../notify/logger.js";
 import { ensureUndiciGlobalProxy } from "../util/proxy.js";
+import { createEthersV5Wallet, deriveEoaAddress } from "../crypto/wallet.js";
 
 // Keyed per wallet so multi-account live runs never reuse another wallet's
 // SecureClient / approval state (cacheKey includes proxyAddress + creds + mode).
@@ -40,7 +40,7 @@ function secureWalletMode(wallet: WalletConfig): "auto" | "settings" {
   const raw = (process.env.POLYMARKET_SECURE_WALLET ?? "").trim().toLowerCase();
   if (raw === "auto") return "auto";
   if (raw === "settings") return "settings";
-  const eoa = new Wallet(wallet.privateKey).address.toLowerCase();
+  const eoa = deriveEoaAddress(wallet.privateKey).toLowerCase();
   return wallet.proxyAddress.toLowerCase() !== eoa ? "settings" : "auto";
 }
 
@@ -84,13 +84,15 @@ export async function getSecureClient(wallet: WalletConfig): Promise<SecureClien
   const clientPromise = (async () => {
     await ensureUndiciGlobalProxy();
 
-    const signer = signerFrom(new Wallet(wallet.privateKey) as Parameters<typeof signerFrom>[0]);
+    const signer = signerFrom(
+      createEthersV5Wallet(wallet.privateKey) as Parameters<typeof signerFrom>[0]
+    );
     const mode = secureWalletMode(wallet);
     const hasRelayer = Boolean(wallet.relayerApiKey && wallet.relayerApiKeyAddress);
 
     await prepareRelayerDeployedWallet(wallet, mode);
 
-    const eoa = new Wallet(wallet.privateKey).address.toLowerCase();
+    const eoa = deriveEoaAddress(wallet.privateKey).toLowerCase();
     const isDepositWallet =
       mode === "settings" && wallet.proxyAddress.toLowerCase() !== eoa;
 
@@ -260,7 +262,7 @@ export const DEPOSIT_WALLET_CLOB_KEY_ERROR =
   "Workaround: place orders on polymarket.com; track https://github.com/Polymarket/clob-client-v2/issues/65";
 
 function isDepositWalletConfig(wallet: WalletConfig): boolean {
-  const eoa = new Wallet(wallet.privateKey).address.toLowerCase();
+  const eoa = deriveEoaAddress(wallet.privateKey).toLowerCase();
   return wallet.proxyAddress.toLowerCase() !== eoa;
 }
 
@@ -280,7 +282,7 @@ export async function assertDepositWalletCanPlaceOrders(wallet: WalletConfig): P
   }
 
   const client = await getSecureClient(wallet);
-  const eoa = new Wallet(wallet.privateKey).address;
+  const eoa = deriveEoaAddress(wallet.privateKey);
   throw new Error(
     `${DEPOSIT_WALLET_CLOB_KEY_ERROR}\n` +
       `  deposit wallet: ${wallet.proxyAddress}\n` +

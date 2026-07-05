@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
-import { Wallet } from "@ethersproject/wallet";
+import { deriveEoaAddress } from "../src/crypto/wallet.js";
 
 const EOA_KEY = "0x0000000000000000000000000000000000000000000000000000000000000001";
 const PROXY = "0x435c5458Dff07905fF2740B4defBe178920ec425";
@@ -27,7 +27,7 @@ describe("resolveTradingBackend", () => {
     const wallet = loadWalletConfig();
     expect(wallet.tradingBackend).toBe("secure");
     expect(wallet.signatureType).toBe(3);
-    const eoa = new Wallet(EOA_KEY).address.toLowerCase();
+    const eoa = deriveEoaAddress(EOA_KEY).toLowerCase();
     expect(wallet.proxyAddress.toLowerCase()).not.toBe(eoa);
   });
 

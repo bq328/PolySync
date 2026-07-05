@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { Wallet } from "@ethersproject/wallet";
 import type { ApiContext } from "./routes.js";
 import {
   createAccountSchema,
@@ -23,6 +22,7 @@ import {
 import { readNormalizedConfigDocument, writeNormalizedConfigDocument } from "../config/write.js";
 import { syncAggregateHealth } from "../notify/health.js";
 import { logInfo } from "../notify/logger.js";
+import { deriveEoaAddress } from "../crypto/wallet.js";
 
 function addAccountToNormalized(
   normalized: NormalizedConfigDocument,
@@ -241,7 +241,7 @@ export async function updateAccount(
     }
 
     if (
-      nextAddress.toLowerCase() !== new Wallet(nextPrivateKey).address.toLowerCase() &&
+      nextAddress.toLowerCase() !== deriveEoaAddress(nextPrivateKey).toLowerCase() &&
       signatureType === 0
     ) {
       return {
@@ -309,7 +309,7 @@ export function validateWalletCredentials(body: unknown): {
   try {
     const input = createAccountSchema.parse(body);
     const pk = normalizePrivateKey(input.privateKey)!;
-    const eoa = new Wallet(pk).address;
+    const eoa = deriveEoaAddress(pk);
     return { ok: true, eoaAddress: eoa };
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : String(e) };

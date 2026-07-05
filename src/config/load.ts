@@ -2,7 +2,6 @@ import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { parse as parseYaml } from "yaml";
 import { z } from "zod";
-import { Wallet } from "@ethersproject/wallet";
 import type {
   AppConfig,
   AccountDefinition,
@@ -24,6 +23,7 @@ import {
 } from "./document.js";
 import { resolveAccountDbPath } from "../state/db-path.js";
 import { applyProxyFromYaml } from "../util/proxy.js";
+import { deriveEoaAddress, normalizePrivateKey } from "../crypto/wallet.js";
 
 export {
   appConfigSchema,
@@ -64,13 +64,6 @@ function formatConfigValidationError(e: z.ZodError, configPath: string): string 
   return `config.yaml 校验失败:\n${lines.join("\n")}`;
 }
 
-function normalizePrivateKey(raw: string): string | null {
-  const s = raw.trim();
-  if (/^0x[a-fA-F0-9]{64}$/.test(s)) return s;
-  if (/^[a-fA-F0-9]{64}$/.test(s)) return `0x${s}`;
-  return null;
-}
-
 function resolveTradingBackend(_walletEnv: string): TradingBackendKind {
   const suffix = _walletEnv.trim();
   const explicit = (
@@ -93,7 +86,7 @@ function resolveSignatureType(
   if (explicit !== undefined && explicit.trim() !== "") {
     return parseInt(explicit, 10);
   }
-  const eoa = new Wallet(privateKey).address.toLowerCase();
+  const eoa = deriveEoaAddress(privateKey).toLowerCase();
   return proxyAddress.toLowerCase() !== eoa ? 1 : 0;
 }
 
@@ -412,7 +405,7 @@ export function loadConfig(configPath = "config.yaml"): RuntimeConfig {
 
 export function validateRuntime(config: RuntimeConfig): string | null {
   const { wallet, app } = config;
-  const eoa = new Wallet(wallet.privateKey).address.toLowerCase();
+  const eoa = deriveEoaAddress(wallet.privateKey).toLowerCase();
   if (wallet.proxyAddress.toLowerCase() !== eoa && wallet.signatureType === 0) {
     return "POLYMARKET_ADDRESS differs from EOA; set POLYMARKET_SIGNATURE_TYPE=1 for proxy wallet";
   }

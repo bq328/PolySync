@@ -1,15 +1,10 @@
 import { z } from "zod";
-import { Wallet } from "@ethersproject/wallet";
+import { deriveEoaAddress, normalizePrivateKey } from "../crypto/wallet.js";
+
+export { normalizePrivateKey };
 
 const ACCOUNT_ID_RE = /^[a-zA-Z0-9_-]+$/;
 const ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
-
-export function normalizePrivateKey(raw: string): string | null {
-  const s = raw.trim();
-  if (/^0x[a-fA-F0-9]{64}$/.test(s)) return s;
-  if (/^[a-fA-F0-9]{64}$/.test(s)) return `0x${s}`;
-  return null;
-}
 
 export const createAccountSchema = z
   .object({
@@ -35,7 +30,7 @@ export const createAccountSchema = z
       return;
     }
     try {
-      const eoa = new Wallet(pk).address.toLowerCase();
+      const eoa = deriveEoaAddress(pk).toLowerCase();
       const proxy = data.address.toLowerCase();
       const sig = data.signatureType ?? (proxy !== eoa ? 1 : 0);
       if (proxy !== eoa && sig === 0) {
@@ -82,7 +77,7 @@ export type UpdateAccountInput = z.infer<typeof updateAccountSchema>;
 
 export function resolvedSignatureType(input: CreateAccountInput): number {
   const pk = normalizePrivateKey(input.privateKey)!;
-  const eoa = new Wallet(pk).address.toLowerCase();
+  const eoa = deriveEoaAddress(pk).toLowerCase();
   if (input.signatureType !== undefined) return input.signatureType;
   return input.address.toLowerCase() !== eoa ? 1 : 0;
 }
@@ -94,7 +89,7 @@ export function resolvedSignatureTypeForWallet(
 ): number {
   const pk = normalizePrivateKey(privateKey);
   if (!pk) throw new Error("Invalid private key");
-  const eoa = new Wallet(pk).address.toLowerCase();
+  const eoa = deriveEoaAddress(pk).toLowerCase();
   if (explicit !== undefined) return explicit;
   return proxyAddress.toLowerCase() !== eoa ? 1 : 0;
 }

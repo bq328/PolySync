@@ -68,7 +68,9 @@ Scripts and tests also use ethers v5. They can be migrated after the runtime pat
 
 ### Phase 1: Introduce a wallet crypto helper
 
-Create a small internal helper, for example `src/crypto/wallet.ts`, that owns:
+Status: done in `src/crypto/wallet.ts`.
+
+Create a small internal helper that owns:
 
 - private key normalization
 - EOA address derivation
@@ -76,6 +78,12 @@ Create a small internal helper, for example `src/crypto/wallet.ts`, that owns:
 - ABI encoding / hashing helpers needed by `deposit-wallet-clob-auth`
 
 This isolates the migration and avoids touching business logic repeatedly.
+
+Current runtime ethers v5 usage is intentionally concentrated in this helper,
+with `secure-client` still creating an ethers-v5 signer only for the current
+`@polymarket/client/ethers-v5` adapter. `tests/crypto-wallet.test.ts` pins
+deterministic address, hash, ABI-hash, and typed-data signature outputs so the
+next viem swap can prove byte compatibility.
 
 ### Phase 2: Switch SecureClient signing to viem
 
