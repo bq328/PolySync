@@ -38,6 +38,7 @@ import {
 } from "./discover.js";
 import { buildWalletProfile } from "./wallet.js";
 import { createAccount, updateAccount } from "./accounts.js";
+import { getActivity } from "../monitor/data-api.js";
 import { buildAccountPnlSnapshot, parsePnlRange } from "./pnl.js";
 import { cancelPendingOrder } from "./orders.js";
 import { deleteLeader, findLeaderIdForTrader } from "./leaders.js";
@@ -127,7 +128,8 @@ export async function handleApiRequest(
   }
 
   if (pathname === "/api/leaders/validate" && method === "GET") {
-    return handleValidateLeader(searchParams);
+    const actx = ctx.manager.toApiContext(searchParams.get("accountId"));
+    return handleValidateLeader(searchParams, actx.getConfig().wallet.dataApiUrl);
   }
 
   if (pathname === "/api/discover/leaderboard" && method === "GET") {
@@ -143,7 +145,8 @@ export async function handleApiRequest(
   }
 
   if (pathname === "/api/settings/proxy/test" && method === "POST") {
-    return testProxyConnection();
+    const actx = ctx.manager.toApiContext(searchParams.get("accountId"));
+    return testProxyConnection(actx.getConfig().wallet.dataApiUrl);
   }
 
   if (pathname === "/api/settings/telegram" && method === "PATCH") {
@@ -191,7 +194,7 @@ export async function handleApiRequest(
   }
 
   if (path === "/api/settings/proxy/test" && method === "POST") {
-    return testProxyConnection();
+    return testProxyConnection(actx.getConfig().wallet.dataApiUrl);
   }
 
   const orderCancelMatch = path.match(/^\/api\/orders\/([^/]+)\/cancel$/);
@@ -454,7 +457,8 @@ async function handleDiscoverLeaderboard(
 }
 
 async function handleValidateLeader(
-  searchParams: URLSearchParams
+  searchParams: URLSearchParams,
+  dataApiUrl: string
 ): Promise<{ status: number; body: unknown }> {
   const address = searchParams.get("address")?.trim();
   const username = searchParams.get("username")?.replace(/^@/, "").trim();
@@ -463,7 +467,7 @@ async function handleValidateLeader(
     if (!/^0x[a-fA-F0-9]{40}$/.test(address)) {
       return { status: 400, body: { valid: false, error: "Invalid address format" } };
     }
-    const result = await validateLeaderAddress(address);
+    const result = await validateLeaderAddress(address, dataApiUrl);
     return {
       status: 200,
       body: { mode: "address", address, ...result },
@@ -473,7 +477,7 @@ async function handleValidateLeader(
   if (username) {
     try {
       const resolved = await resolveUsernameToAddress(username);
-      const result = await validateLeaderAddress(resolved);
+      const result = await validateLeaderAddress(resolved, dataApiUrl);
       return {
         status: 200,
         body: { mode: "username", username, resolvedAddress: resolved, ...result },
@@ -645,21 +649,24 @@ function buildLeaders(ctx: LegacyAccountContext) {
   }));
 }
 
-import { ActivityType } from "@polymarket/bindings/data";
-
 export async function validateLeaderAddress(
-  address: string
+  address: string,
+  dataApiUrl = "https://data-api.polymarket.com"
 ): Promise<{ valid: boolean; trades: number }> {
   try {
-    const { getPublicClient } = await import("../sdk/public-client.js");
-    const client = await getPublicClient();
-    const paginator = client.listActivity({
-      user: address,
-      pageSize: 5,
-      type: [ActivityType.TRADE],
-    });
-    const page = await paginator.firstPage();
-    const trades = page.items.filter((a) => a.type === "TRADE").length;
+    const rows = await getActivity(
+      dataApiUrl,
+      {
+        user: address,
+        limit: 5,
+        offset: 0,
+        type: "TRADE",
+        sortBy: "TIMESTAMP",
+        sortDirection: "DESC",
+      },
+      1
+    );
+    const trades = rows.filter((a) => a.type === "TRADE").length;
     return { valid: trades > 0, trades };
   } catch {
     return { valid: false, trades: 0 };

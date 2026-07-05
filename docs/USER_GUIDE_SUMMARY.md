@@ -68,6 +68,7 @@ leaders:
 1. 打开 `https://polymarket.com/@用户名`
 2. DevTools → Network → 搜 `activity` → 参数 `user=0x...`
 3. 验证：`curl "https://data-api.polymarket.com/activity?user=0x...&limit=5"`
+4. 若大陆网络超时，使用 `HTTPS_PROXY=...` 或设置 `POLYMARKET_DATA_API_URL` 为自建反代根地址
 
 ---
 

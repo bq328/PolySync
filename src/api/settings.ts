@@ -22,7 +22,7 @@ import {
   isProxyConfigured,
   maskProxyUrl,
 } from "../util/proxy.js";
-import { fetchWithTimeout } from "../util/fetch.js";
+import { getActivity } from "../monitor/data-api.js";
 import {
   flushLivePendingBeforePreview,
   migratePreviewToLiveDb,
@@ -190,12 +190,22 @@ export async function patchGlobalSettings(
   }
 }
 
-export async function testProxyConnection(): Promise<{ status: number; body: unknown }> {
+export async function testProxyConnection(
+  dataApiUrl = "https://data-api.polymarket.com"
+): Promise<{ status: number; body: unknown }> {
   try {
-    const { getPublicClient } = await import("../sdk/public-client.js");
-    const client = await getPublicClient();
-    const paginator = client.listActivity({ user: "0x0000000000000000000000000000000000000001", pageSize: 1 });
-    await paginator.firstPage();
+    await getActivity(
+      dataApiUrl,
+      {
+        user: "0x0000000000000000000000000000000000000001",
+        limit: 1,
+        offset: 0,
+        type: "TRADE",
+        sortBy: "TIMESTAMP",
+        sortDirection: "DESC",
+      },
+      0
+    );
     return {
       status: 200,
       body: {

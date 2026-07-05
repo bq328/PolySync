@@ -25,8 +25,9 @@
 
 1. **设置 → 网络** 配置 static / dynamic 代理
 2. 或在 `.env` 设置 `HTTPS_PROXY=http://…`
-3. 点击 **测试连接** 确认通过
-4. 刷新页面
+3. 若 `data-api.polymarket.com` 在本地 TCP 握手卡死，可设置 `POLYMARKET_DATA_API_URL=https://你的反代域名`
+4. 点击 **测试连接** 确认通过
+5. 刷新页面
 
 ### 钱包资料报错
 
