@@ -2,7 +2,7 @@
 
 | 项目 | 要求 |
 |------|------|
-| Node.js | ≥ 20（推荐 LTS） |
+| Node.js | ≥ 24 |
 | 网络 | 可访问 Polymarket API（国内常需代理） |
 | 浏览器 | Chrome / Firefox / Safari 现代版本 |
 

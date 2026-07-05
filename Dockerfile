@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:20-bookworm-slim AS builder
+FROM node:24-bookworm-slim AS builder
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends python3 make g++ \
@@ -18,7 +18,7 @@ RUN cd dashboard && npm ci
 COPY dashboard ./dashboard
 RUN npm run build && npm prune --omit=dev
 
-FROM node:20-bookworm-slim AS runner
+FROM node:24-bookworm-slim AS runner
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends python3 make g++ \

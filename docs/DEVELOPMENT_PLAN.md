@@ -42,7 +42,7 @@
 | 层 | 选型 | 理由 |
 |----|------|------|
 | 语言 | **TypeScript 5** | CLOB V2 SDK、迭代速度、生态参考多 |
-| 运行时 | **Node.js ≥ 20** | ES2022、稳定 LTS |
+| 运行时 | **Node.js ≥ 24** | 匹配 Polymarket SDK 依赖要求 |
 | 配置 | `.env` + **`config.yaml`** | 密钥 vs 策略分离 |
 | 校验 | **Zod** | 启动时 fail-fast |
 | 持久化 | **better-sqlite3** | 同步、单文件、daemon 友好 |

@@ -12,7 +12,7 @@ PolySync 在 Polymarket 上跟踪多个 Leader 的成交，按你的策略缩放
 
 ## 2. 安装
 
-**要求：** Node.js ≥ 20，或 Docker。
+**要求：** Node.js ≥ 24，或 Docker。
 
 ```bash
 cd PolySync
