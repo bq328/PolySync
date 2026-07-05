@@ -54,7 +54,7 @@ sqlite3 data/polymirror.db "SELECT action, COUNT(*) FROM audit_log GROUP BY acti
 - [ ] Read [SECURITY.md](SECURITY.md) and [RUNBOOK.md](RUNBOOK.md)
 - [ ] Live checklist ready:
   - [ ] `preview_mode: false`
-  - [ ] `POLYMIRROR_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING`
+  - [ ] `POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING`
   - [ ] Wallet funded with **minimal** test USDC (≤ $20 first session)
   - [ ] Manual verification plan for first 3 live orders on Polymarket UI
 

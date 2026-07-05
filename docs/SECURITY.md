@@ -21,7 +21,7 @@ The bundled **Dashboard** exposes a REST API that can **read and mutate** config
 
 Live trading gates:
 
-- **`POLYMIRROR_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING`** required at process start, when switching to Live via API, and when **`POST /api/config/reload`** loads a config with `preview_mode: false`.
+- **`POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING`** required at process start, when switching to Live via API, and when **`POST /api/config/reload`** loads a config with `preview_mode: false`. Legacy `POLYMIRROR_LIVE_CONFIRM` remains supported for upgrades.
 - Live copies persist **dedup + GTC pending + fills** atomically via `recordLiveOrderAccepted`; open orders are checked before re-submit.
 - Set **`REQUIRE_LIVE_CONFIRM=false`** only if you accept bypassing this gate entirely.
 

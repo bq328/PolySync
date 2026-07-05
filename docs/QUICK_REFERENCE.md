@@ -77,7 +77,7 @@ preview_mode: false
 
 ```bash
 # .env
-POLYMIRROR_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING
+POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING
 ```
 
 重启 → 人工核对前 3 笔订单。
@@ -128,7 +128,7 @@ SELECT leader_id, token_id, shares FROM positions WHERE shares > 0;
 | 现象 | 处理 |
 |------|------|
 | 无 PREVIEW 日志 | Leader enabled? 地址对? 近期有成交? filters 过严? |
-| Live blocked | 设 `POLYMIRROR_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING` |
+| Live blocked | 设 `POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING` |
 | EOA 报错 | `POLYMARKET_SIGNATURE_TYPE=1` |
 | 循环 blocked | Kill Switch / 日限额 / `enable_copy_trading: false` |
 | 下单失败 | 余额、allowance、`min_order_usd`、看 audit ERROR |

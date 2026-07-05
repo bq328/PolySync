@@ -5,12 +5,53 @@ import { join } from "node:path";
 import { resolveDbPath, resolveAccountDbPath } from "../src/state/db-path.js";
 
 describe("resolveDbPath", () => {
+  function withDbPathEnv(
+    values: { polysync?: string; polymirror?: string },
+    fn: () => void
+  ) {
+    const prevPolysync = process.env.POLYSYNC_DB_PATH;
+    const prevPolymirror = process.env.POLYMIRROR_DB_PATH;
+    if (values.polysync === undefined) delete process.env.POLYSYNC_DB_PATH;
+    else process.env.POLYSYNC_DB_PATH = values.polysync;
+    if (values.polymirror === undefined) delete process.env.POLYMIRROR_DB_PATH;
+    else process.env.POLYMIRROR_DB_PATH = values.polymirror;
+    try {
+      fn();
+    } finally {
+      if (prevPolysync !== undefined) process.env.POLYSYNC_DB_PATH = prevPolysync;
+      else delete process.env.POLYSYNC_DB_PATH;
+      if (prevPolymirror !== undefined) process.env.POLYMIRROR_DB_PATH = prevPolymirror;
+      else delete process.env.POLYMIRROR_DB_PATH;
+    }
+  }
+
   it("uses preview db in preview mode", () => {
     expect(resolveDbPath(true)).toBe("data/preview.db");
   });
 
   it("uses live db when not preview", () => {
     expect(resolveDbPath(false)).toBe("data/polymirror.db");
+  });
+
+  it("uses POLYSYNC_DB_PATH override", () => {
+    withDbPathEnv({ polysync: "data/custom-polysync.db" }, () => {
+      expect(resolveDbPath(false)).toBe("data/custom-polysync.db");
+    });
+  });
+
+  it("keeps POLYMIRROR_DB_PATH as a compatibility fallback", () => {
+    withDbPathEnv({ polymirror: "data/custom-polymirror.db" }, () => {
+      expect(resolveDbPath(false)).toBe("data/custom-polymirror.db");
+    });
+  });
+
+  it("prefers POLYSYNC_DB_PATH over the compatibility fallback", () => {
+    withDbPathEnv(
+      { polysync: "data/custom-polysync.db", polymirror: "data/custom-polymirror.db" },
+      () => {
+        expect(resolveDbPath(false)).toBe("data/custom-polysync.db");
+      }
+    );
   });
 });
 

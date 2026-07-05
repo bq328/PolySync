@@ -1,6 +1,7 @@
 import type { GlobalConfig } from "../config/types.js";
 import type { StateStore } from "../state/store.js";
 import { logError } from "../notify/logger.js";
+import { liveConfirmEnvName, readLiveConfirm } from "../config/env.js";
 
 export interface RiskCheckResult {
   allow: boolean;
@@ -110,10 +111,10 @@ export class RiskGate {
 export function assertLiveTradingAllowed(previewMode: boolean): void {
   if (previewMode) return;
   const require = (process.env.REQUIRE_LIVE_CONFIRM ?? "true").toLowerCase() !== "false";
-  const confirm = (process.env.POLYMIRROR_LIVE_CONFIRM ?? "").trim();
+  const confirm = readLiveConfirm();
   if (require && confirm !== "I_UNDERSTAND_LIVE_TRADING") {
     throw new Error(
-      "Live trading blocked: set POLYMIRROR_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING in .env"
+      `Live trading blocked: set ${liveConfirmEnvName()}=I_UNDERSTAND_LIVE_TRADING in .env`
     );
   }
   // Escape hatch is intentional (automation) but must never be silent.

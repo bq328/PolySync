@@ -401,7 +401,7 @@ global:
 2. 修改 `.env`：
 
 ```bash
-POLYMIRROR_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING
+POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING
 ```
 
 3. 重启进程：
@@ -413,7 +413,7 @@ npm run dev
 
 4. 在 Polymarket 网页端 **人工核对前几笔** 订单的 token、方向、数量。
 
-> 若未设置 `POLYMIRROR_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING`，程序会拒绝启动实盘。
+> 若未设置 `POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING`，程序会拒绝启动实盘。旧变量 `POLYMIRROR_LIVE_CONFIRM` 仍兼容。
 
 ---
 
@@ -685,7 +685,7 @@ curl http://localhost:8080/health
     ↓
 ③ 钱包充入 ≤ $20 测试 USDC
     ↓
-④ preview_mode: false + POLYMIRROR_LIVE_CONFIRM
+④ preview_mode: false + POLYSYNC_LIVE_CONFIRM
     ↓
 ⑤ 重启，人工核对前 3 笔订单
     ↓
@@ -774,7 +774,7 @@ POLYMARKET_SIGNATURE_TYPE=1
 实盘需设置：
 
 ```bash
-POLYMIRROR_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING
+POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING
 ```
 
 ### Q5：Preview 正常，Live 下单失败

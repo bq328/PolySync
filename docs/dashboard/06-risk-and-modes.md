@@ -28,7 +28,7 @@
 | 操作 | 要求 |
 |------|------|
 | Preview → Live | 界面二次确认 |
-| Live 环境变量 | `.env` 设置 `POLYMIRROR_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING` |
+| Live 环境变量 | `.env` 设置 `POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING` |
 | Live → Preview | 界面确认，停止真实下单 |
 
 ### Preview → Live 数据迁移

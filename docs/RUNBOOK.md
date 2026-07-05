@@ -80,7 +80,7 @@ Toggle per event in `config.yaml` under `notify:`.
 3. Add to `.env`:
 
 ```bash
-POLYMIRROR_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING
+POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING
 ```
 
 4. Restart bot and verify first order manually on Polymarket UI
@@ -128,7 +128,7 @@ trade_aggregation_window_ms: 3000
 |---------|--------|
 | No copies | Leader `enabled`? Recent trades on Polymarket? `max_trade_age_hours`? |
 | `Copy cycle blocked` | Kill switch, `enable_copy_trading: false`, daily volume cap |
-| `Live trading blocked` | Set `POLYMIRROR_LIVE_CONFIRM` |
+| `Live trading blocked` | Set `POLYSYNC_LIVE_CONFIRM` |
 | `Gamma profile lookup failed` | Username typo or API down — use `address` instead |
 | Order errors | CLOB balance, allowance, tick size, min order size |
 | Slippage skips | Increase `slippage_tolerance` or use GTC |

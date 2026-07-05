@@ -116,13 +116,16 @@ Or resolve by username:
 2. Add to `.env`:
 
 ```bash
-POLYMIRROR_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING
+POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING
 ```
 
 3. Use a **dedicated wallet with minimal USDC**
 4. Verify first orders on Polymarket UI manually
 
 See [Runbook](docs/RUNBOOK.md) for operations and troubleshooting.
+
+Compatibility note: legacy `POLYMIRROR_LIVE_CONFIRM` and `POLYMIRROR_DB_PATH`
+are still accepted, but new deployments should use `POLYSYNC_*`.
 
 ---
 

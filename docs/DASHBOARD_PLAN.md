@@ -265,7 +265,7 @@ PolyMirror/
 ```
 Step 1: Preview 运行 ≥ 7 天  [=====>    ] 5/7
 Step 2: 确认专用小额钱包      [✓]
-Step 3: 设置 POLYMIRROR_LIVE_CONFIRM  [查看说明]
+Step 3: 设置 POLYSYNC_LIVE_CONFIRM  [查看说明]
 Step 4: [ 我了解风险，切换 Live ]  （二次弹窗 + 输入 CONFIRM）
 ```
 

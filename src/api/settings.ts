@@ -12,6 +12,7 @@ import {
 import { readNormalizedConfigDocument, writeNormalizedConfigDocument } from "../config/write.js";
 import { applyEnvToProcess, upsertEnvFile } from "../config/env-file.js";
 import { accountMergedGlobal } from "../config/document.js";
+import { readLiveConfirm } from "../config/env.js";
 import { assertLiveTradingAllowed } from "../engine/risk.js";
 import { logInfo } from "../notify/logger.js";
 import {
@@ -125,7 +126,7 @@ export function buildSettingsSnapshot(root: ApiContext, actx: AccountApiContext)
 
   const tgToken = process.env.TELEGRAM_BOT_TOKEN?.trim();
   const tgChat = process.env.TELEGRAM_CHAT_ID?.trim();
-  const liveConfirm = (process.env.POLYMIRROR_LIVE_CONFIRM ?? "").trim();
+  const liveConfirm = readLiveConfirm();
   const effectiveUrl = getEffectiveProxyUrl(false) ?? "";
 
   return {

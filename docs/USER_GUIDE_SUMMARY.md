@@ -116,7 +116,7 @@ curl http://localhost:8080/health
 
 1. 钱包充 **≤ $20** 测试 USDC  
 2. `config.yaml` → `preview_mode: false`  
-3. `.env` → `POLYMIRROR_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING`  
+3. `.env` → `POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING`
 4. 重启，在 Polymarket 网页 **人工核对前 3 笔**  
 5. 逐步放大限额  
 
@@ -165,7 +165,7 @@ SELECT * FROM positions WHERE shares > 0;
 | 问题 | 解决 |
 |------|------|
 | 无跟单日志 | 查 Leader 地址、enabled、近期成交、filters |
-| Live 拒绝启动 | 设置 `POLYMIRROR_LIVE_CONFIRM` |
+| Live 拒绝启动 | 设置 `POLYSYNC_LIVE_CONFIRM` |
 | 签名/EOA 错误 | `POLYMARKET_SIGNATURE_TYPE=1` |
 | 临时停止 | `enable_copy_trading: false` 或停进程 |
 

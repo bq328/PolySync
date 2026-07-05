@@ -59,7 +59,7 @@
 ### Preview 有 COPY，Live 没有
 
 - 确认 **设置 → 模式** 已切 Live
-- 确认 `.env` 有 `POLYMIRROR_LIVE_CONFIRM`
+- 确认 `.env` 有 `POLYSYNC_LIVE_CONFIRM`
 - 确认钱包 USDC 余额充足
 - 查看活动流 `ERROR` 记录
 
