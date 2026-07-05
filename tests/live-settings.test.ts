@@ -91,18 +91,15 @@ function buildContexts(dir: string): { root: ApiContext; actx: AccountApiContext
 
 describe("live settings controls", () => {
   let dir: string;
-  let cwd: string;
   let prevLive: string | undefined;
   let prevLegacyLive: string | undefined;
 
   beforeEach(() => {
     dir = mkdtempSync(join(tmpdir(), "polysync-live-settings-"));
-    cwd = process.cwd();
     prevLive = process.env.POLYSYNC_LIVE_CONFIRM;
     prevLegacyLive = process.env.POLYMIRROR_LIVE_CONFIRM;
     delete process.env.POLYSYNC_LIVE_CONFIRM;
     delete process.env.POLYMIRROR_LIVE_CONFIRM;
-    process.chdir(dir);
     vi.mocked(getActivity).mockReset();
     vi.mocked(fetchGeoblockStatus).mockReset();
     vi.mocked(getSecureClient).mockReset();
@@ -110,7 +107,6 @@ describe("live settings controls", () => {
   });
 
   afterEach(() => {
-    process.chdir(cwd);
     if (prevLive === undefined) delete process.env.POLYSYNC_LIVE_CONFIRM;
     else process.env.POLYSYNC_LIVE_CONFIRM = prevLive;
     if (prevLegacyLive === undefined) delete process.env.POLYMIRROR_LIVE_CONFIRM;
@@ -120,8 +116,9 @@ describe("live settings controls", () => {
 
   it("writes the live confirmation env from settings", async () => {
     const { root, actx } = buildContexts(dir);
+    const envPath = join(dir, ".env");
 
-    const result = await configureLiveConfirm(root, actx);
+    const result = await configureLiveConfirm(root, actx, envPath);
 
     expect(result.status).toBe(200);
     expect((result.body as { ok?: boolean; key?: string }).ok).toBe(true);

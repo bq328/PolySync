@@ -297,7 +297,7 @@ export const en: Messages = {
     confirmLiveLi2: "Engine hot-switches to polymirror.db; Preview dedup keys merge into Live DB",
     confirmLiveLi3: "Confirm leaders and risk parameters are configured correctly",
     liveBlocked:
-      "Cannot switch to Live: uncomment POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING in .env, then restart the daemon (npm run dev).",
+      "Cannot switch to Live: click Configure Live confirm first, or set POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING in .env.",
     liveSwitchFailed: "Live switch failed: {message}",
     pollIntervalHint: "poll_interval_ms takes effect on the next poll cycle (no restart needed).",
     copyTradesOnlyLabel: "Copy TRADE activity only",

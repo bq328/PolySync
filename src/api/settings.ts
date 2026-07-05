@@ -236,12 +236,13 @@ export async function testProxyConnection(
 
 export async function configureLiveConfirm(
   root: ApiContext,
-  actx: AccountApiContext
+  actx: AccountApiContext,
+  envPath?: string
 ): Promise<{ status: number; body: unknown }> {
   try {
     const key = liveConfirmEnvName();
     const updates = { [key]: "I_UNDERSTAND_LIVE_TRADING" };
-    upsertEnvFile(updates);
+    upsertEnvFile(updates, envPath);
     applyEnvToProcess(updates);
     logInfo("Live confirmation env configured via dashboard", { accountId: actx.accountId });
     return {

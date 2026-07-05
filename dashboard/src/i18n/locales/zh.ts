@@ -297,7 +297,7 @@ export const zh: Messages = {
     confirmLiveLi2: "引擎热切换到 polymirror.db，模拟去重记录会合并到实盘数据库",
     confirmLiveLi3: "请确认跟单对象与风控参数已正确配置",
     liveBlocked:
-      "无法切换实盘：请在 .env 取消注释 POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING，然后重启 daemon（npm run dev）。",
+      "无法切换实盘：请先点击「配置实盘确认」，或在 .env 设置 POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING。",
     liveSwitchFailed: "切换实盘失败：{message}",
     pollIntervalHint: "poll_interval_ms 保存后会在下一轮 poll 自动生效（无需重启进程）。",
     copyTradesOnlyLabel: "只跟 TRADE 类型",
