@@ -10,6 +10,7 @@ import {
   switchPreviewMode,
   testLiveConnection,
   testProxyConnection,
+  testTelegramSettings,
   type SettingsSnapshot,
 } from "../api/settings";
 import { PageHeader } from "../components/ui/PageHeader";
@@ -215,6 +216,19 @@ export function SettingsPage() {
       setTgToken("");
       setTgChatId("");
       queryClient.invalidateQueries({ queryKey: ["settings"] });
+    },
+    onError: (e: Error) => setErr(e.message),
+  });
+
+  const testTelegram = useMutation({
+    mutationFn: testTelegramSettings,
+    onSuccess: (r) => {
+      if (r.ok) {
+        toast(translateApiMessage(t, r.message), "success");
+        setErr(null);
+      } else {
+        setErr(translateApiMessage(t, r.message));
+      }
     },
     onError: (e: Error) => setErr(e.message),
   });
@@ -641,6 +655,14 @@ export function SettingsPage() {
             <div className="form-actions" style={{ marginTop: "1rem" }}>
               <button type="button" disabled={saveTelegram.isPending} onClick={() => saveTelegram.mutate()}>
                 {saveTelegram.isPending ? t("settings.saving") : t("settings.saveTelegram")}
+              </button>
+              <button
+                type="button"
+                className="secondary"
+                disabled={testTelegram.isPending || !data.env.telegramConfigured}
+                onClick={() => testTelegram.mutate()}
+              >
+                {testTelegram.isPending ? t("settings.testingTelegram") : t("settings.testTelegram")}
               </button>
             </div>
             <p className="muted form-hint">{t("settings.telegramEnvHint")}</p>

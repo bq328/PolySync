@@ -15,6 +15,7 @@ import {
   stopCopyTrading,
   testProxyConnection,
   testLiveConnection,
+  testTelegramSettings,
 } from "./settings.js";
 import {
   leaderPatchSchema,
@@ -163,6 +164,10 @@ export async function handleApiRequest(
 
   if (pathname === "/api/settings/telegram" && method === "PATCH") {
     return patchTelegramSettings(body);
+  }
+
+  if (pathname === "/api/settings/telegram/test" && method === "POST") {
+    return testTelegramSettings();
   }
 
   const { accountId, subPath } = parseRoute(pathname, searchParams);

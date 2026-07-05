@@ -26,6 +26,7 @@ import { getActivity } from "../monitor/data-api.js";
 import { fetchGeoblockStatus } from "../executor/geoblock.js";
 import { getSecureClient } from "../executor/secure-client.js";
 import { fetchWalletCollateral } from "../executor/balance.js";
+import { loadTelegramConfig, sendTelegram } from "../notify/telegram.js";
 import {
   flushLivePendingBeforePreview,
   migratePreviewToLiveDb,
@@ -343,13 +344,10 @@ const telegramSettingsSchema = z.object({
   chatId: z.string().trim().optional(),
 });
 
-/**
- * Persist Telegram credentials to .env. Token is never echoed back.
- * The running TelegramNotifier captures credentials at engine start,
- * so new values apply on the next engine restart.
- */
+/** Persist Telegram credentials to .env. Token is never echoed back. */
 export async function patchTelegramSettings(
-  body: unknown
+  body: unknown,
+  envPath?: string
 ): Promise<{ status: number; body: unknown }> {
   try {
     const input = telegramSettingsSchema.parse(body);
@@ -381,7 +379,7 @@ export async function patchTelegramSettings(
       return { status: 400, body: { error: "未提供要更新的字段" } };
     }
 
-    upsertEnvFile(updates);
+    upsertEnvFile(updates, envPath);
     applyEnvToProcess(updates);
     logInfo("Telegram settings updated via dashboard", {
       tokenUpdated: updates.TELEGRAM_BOT_TOKEN !== undefined,
@@ -397,7 +395,49 @@ export async function patchTelegramSettings(
         telegramConfigured: Boolean(tgToken && tgChat),
         telegramTokenSet: Boolean(tgToken),
         telegramChatSet: Boolean(tgChat),
-        message: "Telegram 凭证已保存到 .env（不会回显）。重启引擎后通知即使用新凭证。",
+        message: "Telegram 凭证已保存到 .env（不会回显）。通知将在下一轮轮询使用新凭证。",
+      },
+    };
+  } catch (e) {
+    return formatSettingsError(e);
+  }
+}
+
+export async function testTelegramSettings(): Promise<{ status: number; body: unknown }> {
+  try {
+    const cfg = loadTelegramConfig();
+    if (!cfg.botToken || !cfg.chatId) {
+      return {
+        status: 200,
+        body: {
+          ok: false,
+          message: "Telegram Bot Token 或 Chat ID 未配置",
+        },
+      };
+    }
+
+    const result = await sendTelegram(
+      { ...cfg, onCopy: true, onError: true, onKillSwitch: true },
+      `PolySync Telegram 测试消息 ${new Date().toISOString()}`
+    );
+
+    if (!result.ok) {
+      return {
+        status: 200,
+        body: {
+          ok: false,
+          message: result.error ?? "Telegram 测试发送失败",
+          status: result.status,
+        },
+      };
+    }
+
+    return {
+      status: 200,
+      body: {
+        ok: true,
+        message: "Telegram 测试消息已发送",
+        status: result.status,
       },
     };
   } catch (e) {

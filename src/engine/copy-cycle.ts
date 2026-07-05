@@ -554,16 +554,17 @@ export async function startBot(configPath = "config.yaml"): Promise<void> {
   syncAggregateHealth(manager.list());
   healthSnapshot.startedAt = Date.now();
 
-  const firstAccount = manager.list()[0];
-  const tgEnv = loadTelegramConfig();
-  const telegram = new TelegramNotifier({
-    botToken: tgEnv.botToken,
-    chatId: tgEnv.chatId,
-    onCopy: firstAccount?.config.app.global.notify.telegramOnCopy && tgEnv.onCopy,
-    onError: firstAccount?.config.app.global.notify.telegramOnError && tgEnv.onError,
-    onKillSwitch:
-      firstAccount?.config.app.global.notify.telegramOnKillSwitch && tgEnv.onKillSwitch,
-  });
+  const telegramForAccount = (account: (typeof accounts)[number]) => {
+    const tgEnv = loadTelegramConfig();
+    return new TelegramNotifier({
+      botToken: tgEnv.botToken,
+      chatId: tgEnv.chatId,
+      onCopy: account.config.app.global.notify.telegramOnCopy && tgEnv.onCopy,
+      onError: account.config.app.global.notify.telegramOnError && tgEnv.onError,
+      onKillSwitch:
+        account.config.app.global.notify.telegramOnKillSwitch && tgEnv.onKillSwitch,
+    });
+  };
 
   logInfo("PolySync starting", {
     accounts: manager.list().map((a) => ({
@@ -618,6 +619,7 @@ export async function startBot(configPath = "config.yaml"): Promise<void> {
     try {
       for (const account of manager.enabled()) {
         const tag = `[${account.id}]`;
+        const telegram = telegramForAccount(account);
         try {
           const result = await runCopyCycle(account.config, account.store, telegram);
           manager.updateHealthAfterPoll(account.id, result, result.walletDrifts);

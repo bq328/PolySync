@@ -162,3 +162,12 @@ export interface TelegramPatchResult {
 
 export const patchTelegramSettings = (body: { botToken?: string; chatId?: string }) =>
   apiPatch<TelegramPatchResult>("/api/settings/telegram", body);
+
+export interface TelegramTestResult {
+  ok: boolean;
+  message: string;
+  status?: number;
+}
+
+export const testTelegramSettings = () =>
+  apiPost<TelegramTestResult>("/api/settings/telegram/test", {});

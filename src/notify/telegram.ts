@@ -23,8 +23,19 @@ export function isTelegramEnabled(cfg: TelegramConfig): boolean {
   return Boolean(cfg.botToken && cfg.chatId);
 }
 
-export async function sendTelegram(cfg: TelegramConfig, text: string): Promise<void> {
-  if (!isTelegramEnabled(cfg)) return;
+export interface TelegramSendResult {
+  ok: boolean;
+  status?: number;
+  error?: string;
+}
+
+export async function sendTelegram(
+  cfg: TelegramConfig,
+  text: string
+): Promise<TelegramSendResult> {
+  if (!isTelegramEnabled(cfg)) {
+    return { ok: false, error: "Telegram Bot Token 或 Chat ID 未配置" };
+  }
 
   const url = `https://api.telegram.org/bot${cfg.botToken}/sendMessage`;
   try {
@@ -38,10 +49,25 @@ export async function sendTelegram(cfg: TelegramConfig, text: string): Promise<v
       }),
     });
     if (!res.ok) {
-      logError("Telegram send failed", { status: res.status });
+      let detail = "";
+      try {
+        detail = (await res.text()).slice(0, 240);
+      } catch {
+        /* ignore unreadable error body */
+      }
+      logError("Telegram send failed", { status: res.status, detail });
+      return {
+        ok: false,
+        status: res.status,
+        error: detail || `Telegram HTTP ${res.status}`,
+      };
     }
+    return { ok: true, status: res.status };
   } catch (e) {
-    logError("Telegram send error", { error: e instanceof Error ? e.message : String(e) });
+    const rawError = e instanceof Error ? e.message : String(e);
+    const error = cfg.botToken ? rawError.replaceAll(cfg.botToken, "<redacted>") : rawError;
+    logError("Telegram send error", { error });
+    return { ok: false, error };
   }
 }
 

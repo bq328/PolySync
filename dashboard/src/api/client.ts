@@ -31,7 +31,7 @@ export function accountApi(path: string): string {
     normalized.startsWith("/api/leaders/validate") ||
     normalized === "/api/config/reload" ||
     normalized === "/api/settings/proxy/test" ||
-    normalized === "/api/settings/telegram"
+    normalized.startsWith("/api/settings/telegram")
   ) {
     return normalized;
   }
