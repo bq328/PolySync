@@ -1,205 +1,109 @@
 # PolySync
 
-**Multi-leader trade sync on Polymarket** — mirror trades from multiple leader wallets with per-leader sizing, conflict resolution, and risk controls.
-
-**Polymarket 多 Leader 镜像跟单引擎** — 按 Leader 独立策略缩放仓位，统一风控、去重与冲突处理。
+**PolySync** is a self-hosted Polymarket trade sync engine. It watches one or
+more leader wallets, scales matching trades with per-leader rules, and applies
+shared risk controls before previewing or placing orders.
 
 [![CI](https://github.com/bq328/PolySync/actions/workflows/ci.yml/badge.svg)](https://github.com/bq328/PolySync/actions/workflows/ci.yml)
 
-**Version 1.0.0** — single-platform Polymarket multi-leader copy trading (mode A).
+## What It Does
 
----
+| Area | Summary |
+|------|---------|
+| Leaders | Track proxy wallet addresses or resolve Polymarket usernames |
+| Sizing | `PERCENTAGE`, `FIXED`, `ADAPTIVE`, and tiered multipliers |
+| Risk | Daily volume caps, max order size, max markets, slippage, kill switch |
+| Modes | Preview by default; Live requires explicit confirmation |
+| Dashboard | Local web UI on the same port as `/health` |
+| Storage | SQLite state under `data/` |
 
-## Features
-
-| Feature | Description |
-|---------|-------------|
-| Multi-leader monitor | Parallel poll via Polymarket Data API |
-| Sizing | `PERCENTAGE` / `FIXED` / `ADAPTIVE` + tiered multipliers |
-| Risk | Daily caps, max markets, slippage, kill switch |
-| Conflict | `skip_both` / `net` / `priority_leader` |
-| Preview | Dry-run default — no real orders |
-| Live | CLOB V2 (`GTC` / `FAK` / `FOK`) with explicit confirm env |
-| Notify | Telegram + `GET /health` |
-| Persistence | SQLite (trades, positions, audit log) |
-
----
-
-## Requirements
-
-- Node.js **>= 20** (or Docker)
-- Polymarket proxy wallet + USDC (live only)
-- Leader proxy addresses or Polymarket usernames
-
----
-
-## Quick start
-
-### Local (preview recommended)
+## Quick Start
 
 ```bash
-git clone https://github.com/bq328/PolySync.git PolySync && cd PolySync
+git clone https://github.com/bq328/PolySync.git PolySync
+cd PolySync
 npm install
 cp .env.example .env
 cp config.preview.template.yaml config.yaml
-# Edit .env (wallet) and config.yaml (leaders, preview_mode: true)
 npm run dev
 ```
 
-Health check:
+Before running live, edit:
 
-```bash
-curl -s http://localhost:8080/health | jq
+- `.env`: wallet, optional Telegram, optional Dashboard token
+- `config.yaml`: leaders, sizing, filters, risk limits
+
+Preview mode is enabled in the template and does not place real orders.
+
+## Dashboard
+
+When `health_port` is enabled, open:
+
+```text
+http://127.0.0.1:8080/
 ```
 
-### Docker
+Use `DASHBOARD_TOKEN` in `.env` before exposing the API outside localhost.
+
+## Docker
 
 ```bash
-cp .env.example .env && cp config.example.yaml config.yaml
-# edit files
+cp .env.example .env
+cp config.example.yaml config.yaml
 docker compose up -d --build
 docker compose logs -f
 ```
 
-Or manual build:
+Manual image build:
 
 ```bash
 docker build -t polysync:1.0.0 .
-docker run --rm -p 8080:8080 \
-  -v "$PWD/config.yaml:/app/config.yaml:ro" \
-  -v "$PWD/data:/app/data" \
-  --env-file .env \
-  polysync:1.0.0
 ```
 
----
+## Live Trading
 
-## Configuration
-
-| File | Purpose | Commit? |
-|------|---------|---------|
-| `.env` | Private key, Telegram, live confirm | **No** |
-| `config.yaml` | Leaders, risk, execution | **No** |
-| `config.example.yaml` | Template | Yes |
-| `data/polymirror.db` | SQLite state | **No** |
-
-Leader example:
-
-```yaml
-leaders:
-  - id: whale_a
-    address: "0x..."
-    enabled: true
-    strategy:
-      type: PERCENTAGE
-      copy_size: 10
-```
-
-Or resolve by username:
-
-```yaml
-  - id: trader_b
-    username: "polymarket-handle"
-    enabled: true
-    strategy:
-      type: PERCENTAGE
-      copy_size: 5
-```
-
----
-
-## Live trading
-
-**Only after completing the [7-day preview checklist](docs/PREVIEW_CHECKLIST.md).**
-
-1. Set `preview_mode: false` in `config.yaml`
-2. Add to `.env`:
+Live mode is intentionally gated. Use a dedicated low-balance wallet, complete a
+preview run first, then set:
 
 ```bash
 POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING
 ```
 
-3. Use a **dedicated wallet with minimal USDC**
-4. Verify first orders on Polymarket UI manually
+Then set `preview_mode: false` in `config.yaml` and restart. Legacy
+`POLYMIRROR_LIVE_CONFIRM` and `POLYMIRROR_DB_PATH` are still accepted for
+upgrades, but new deployments should use `POLYSYNC_*`.
 
-See [Runbook](docs/RUNBOOK.md) for operations and troubleshooting.
-
-Compatibility note: legacy `POLYMIRROR_LIVE_CONFIRM` and `POLYMIRROR_DB_PATH`
-are still accepted, but new deployments should use `POLYSYNC_*`.
-
----
-
-## Scripts
+## Common Commands
 
 ```bash
-npm run dev      # development (tsx)
-npm run build    # compile TypeScript + Dashboard
-npm start        # build + run
-npm run dev:dashboard  # Vite dev (proxy → :8080, run daemon separately)
-npm run lint     # typecheck
-npm test         # vitest
-npm run audit    # critical-level audit (CI)
+npm run dev              # run the engine locally
+npm run dev:dashboard    # Vite dashboard dev server
+npm run build            # TypeScript + dashboard build
+npm run lint             # typecheck
+npm test                 # test suite
+npm run audit            # critical-level npm audit
 ```
 
-### Dashboard（M7.1 只读）
+## Important Files
 
-构建后访问 `http://127.0.0.1:8080/`（与 `/health` 同端口）。
-
-```bash
-# 终端 1：引擎
-npm run dev
-
-# 可选：.env 设置 DASHBOARD_TOKEN 启用登录
-# 开发时前端热更新（代理 API 到 8080）
-npm run dev:dashboard   # → http://localhost:5173
-```
-
-页面：**总览** · **Leaders** · **活动流**（只读）。详见 [Dashboard 规划](docs/DASHBOARD_PLAN.md)。
-
----
-
-## Project layout
-
-```
-src/
-  config/      Env + YAML load/validate
-  leaders/     Registry + username resolve
-  monitor/     Data API polling
-  engine/      Dedup, sizing, conflict, risk, aggregate
-  executor/    CLOB V2 auth + orders
-  state/       SQLite
-  notify/      Logger, Telegram, health HTTP
-docs/          Architecture, runbook, security, checklist
-```
-
----
+| Path | Purpose | Commit? |
+|------|---------|---------|
+| `.env` | Secrets and local runtime options | No |
+| `config.yaml` | Leaders, modes, risk and execution config | No |
+| `config.example.yaml` | General template | Yes |
+| `config.preview.template.yaml` | Safer preview-first template | Yes |
+| `data/` | SQLite state | No |
 
 ## Documentation
 
-- **[使用说明书 (User Guide)](docs/USER_GUIDE.md)** — 完整配置与操作指南
-- [Development plan](docs/DEVELOPMENT_PLAN.md)
-- [Architecture](docs/ARCHITECTURE.md)
+- [User guide](docs/USER_GUIDE.md)
 - [Runbook](docs/RUNBOOK.md)
-- [Preview checklist (7 days)](docs/PREVIEW_CHECKLIST.md)
+- [Preview checklist](docs/PREVIEW_CHECKLIST.md)
 - [Security notes](docs/SECURITY.md)
+- [Architecture](docs/ARCHITECTURE.md)
 - [Changelog](CHANGELOG.md)
-- [Feature survey](docs/FEATURES_SURVEY.md)
-
----
-
-## Security
-
-- **Never** commit `.env`, private keys, or `config.yaml`
-- Default **`preview_mode: true`**
-- Use a **dedicated low-balance wallet** for live tests
-- Install dependencies from **official npm registry only**
-- Do not copy dependencies from unverified copy-bot repos (known malicious patterns)
-- Review [SECURITY.md](docs/SECURITY.md) for dependency audit status
-
----
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
-
-PolySync is based on the original PolyMirror project and keeps the MIT license notice.
+MIT. PolySync is based on the original PolyMirror project and keeps the MIT
+license notice.

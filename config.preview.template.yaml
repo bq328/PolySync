@@ -140,7 +140,7 @@ leaders:
   # --- 方式 B: Polymarket 用户名（启动时 Gamma API 解析为 proxy）---
   - id: leader_username_example
     # ↓↓↓ 填 @ 后面的用户名，不要带 @ ↓↓↓
-    username: "REPLACE_POLymarket_USERNAME"
+    username: "REPLACE_POLYMARKET_USERNAME"
     enabled: false
     weight: 0.8
     strategy:

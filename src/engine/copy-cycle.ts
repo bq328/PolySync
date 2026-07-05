@@ -565,7 +565,7 @@ export async function startBot(configPath = "config.yaml"): Promise<void> {
       firstAccount?.config.app.global.notify.telegramOnKillSwitch && tgEnv.onKillSwitch,
   });
 
-  logInfo("PolyMirror starting", {
+  logInfo("PolySync starting", {
     accounts: manager.list().map((a) => ({
       id: a.id,
       enabled: a.enabled,
