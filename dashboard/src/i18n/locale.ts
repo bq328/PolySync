@@ -8,7 +8,7 @@ export const LOCALES: { id: Locale; label: string; native: string }[] = [
   { id: "ko", label: "한국어", native: "한국어" },
 ];
 
-const STORAGE_KEY = "polysync_locale";
+const STORAGE_KEY = "polysync_locale_v2";
 
 export function getStoredLocale(): Locale | null {
   try {
@@ -23,10 +23,6 @@ export function getBrowserLocale(): Locale {
   if (typeof navigator === "undefined") return "zh";
   const lang = navigator.language.toLowerCase();
   if (lang.startsWith("zh-tw") || lang.startsWith("zh-hk")) return "zh-TW";
-  if (lang.startsWith("zh")) return "zh";
-  if (lang.startsWith("ja")) return "ja";
-  if (lang.startsWith("ko")) return "ko";
-  if (lang.startsWith("en")) return "en";
   return "zh";
 }
 

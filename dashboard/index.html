@@ -19,16 +19,12 @@
           if (meta) meta.setAttribute("content", t === "light" ? "#f1f5f9" : "#06080f");
         } catch (e) {}
         try {
-          var lk = "polysync_locale";
+          var lk = "polysync_locale_v2";
           var loc = localStorage.getItem(lk);
           var supported = { zh: 1, en: 1, "zh-TW": 1, ja: 1, ko: 1 };
           if (!supported[loc]) {
             var nav = (navigator.language || "zh").toLowerCase();
             if (nav.indexOf("zh-tw") === 0 || nav.indexOf("zh-hk") === 0) loc = "zh-TW";
-            else if (nav.indexOf("zh") === 0) loc = "zh";
-            else if (nav.indexOf("ja") === 0) loc = "ja";
-            else if (nav.indexOf("ko") === 0) loc = "ko";
-            else if (nav.indexOf("en") === 0) loc = "en";
             else loc = "zh";
           }
           document.documentElement.lang =
