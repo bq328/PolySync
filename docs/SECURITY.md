@@ -52,7 +52,10 @@ npm audit --audit-level=high   # may report transitive issues
 npm audit --audit-level=critical  # passes on v1.0.0
 ```
 
-**Do not** run `npm audit fix --force` — it downgrades `@polymarket/clob-client-v2` and breaks live trading.
+**Do not** run `npm audit fix --force` blindly. Current high findings come from
+the ethers v5 runtime chain used by the Polymarket SDK adapter
+(`@polymarket/client/ethers-v5`). The safer fix is a controlled migration to
+the SDK `viem` adapter; see [SDK_ETHERS6_MIGRATION_EVAL.md](SDK_ETHERS6_MIGRATION_EVAL.md).
 
 CI runs `npm audit --audit-level=critical`.
 
