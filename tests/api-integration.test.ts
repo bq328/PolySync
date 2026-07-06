@@ -3,6 +3,8 @@ import { assertLiveTradingAllowed, assertLiveTradingForAccounts } from "../src/e
 import { patchGlobalSettings } from "../src/api/settings.js";
 import type { ApiContext } from "../src/api/routes.js";
 import type { AccountApiContext } from "../src/accounts/manager.js";
+import { globalSettingsPatchSchema } from "../src/config/settings-schema.js";
+import { globalYamlSchema } from "../src/config/document.js";
 
 describe("assertLiveTradingAllowed", () => {
   function withLiveEnv(
@@ -136,5 +138,39 @@ describe("patchGlobalSettings live gate", () => {
       if (prevRequire !== undefined) process.env.REQUIRE_LIVE_CONFIRM = prevRequire;
       else delete process.env.REQUIRE_LIVE_CONFIRM;
     }
+  });
+});
+
+describe("activity_limit bounds", () => {
+  const yamlGlobal = (activityLimit: number) => ({
+    activity_limit: activityLimit,
+    risk: {
+      enable_copy_trading: true,
+      daily_loss_cap_pct: 20,
+      starting_capital_usd: 500,
+      max_daily_volume_usd: 500,
+      max_open_markets: 15,
+      max_order_usd: 25,
+      min_order_usd: 1,
+      slippage_tolerance: 0.03,
+    },
+    execution: {
+      order_type: "GTC",
+      retry_limit: 3,
+      network_retry_limit: 3,
+      gtc_fill_timeout_ms: 10_000,
+      pending_order_max_age_hours: 48,
+    },
+    conflict: { mode: "priority_leader", priority: [] },
+  });
+
+  it("allows activity_limit up to 10000", () => {
+    expect(globalYamlSchema.parse(yamlGlobal(10000)).activity_limit).toBe(10000);
+    expect(globalSettingsPatchSchema.parse({ activityLimit: 10000 }).activityLimit).toBe(10000);
+  });
+
+  it("rejects activity_limit above 10000", () => {
+    expect(() => globalYamlSchema.parse(yamlGlobal(10001))).toThrow();
+    expect(() => globalSettingsPatchSchema.parse({ activityLimit: 10001 })).toThrow();
   });
 });

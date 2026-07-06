@@ -21,7 +21,7 @@ export const proxySettingsPatchSchema = z.object({
 
 export const globalSettingsPatchSchema = z.object({
   pollIntervalMs: z.number().int().min(1000).optional(),
-  activityLimit: z.number().int().min(10).max(500).optional(),
+  activityLimit: z.number().int().min(10).max(10000).optional(),
   previewMode: z.boolean().optional(),
   copyTradesOnly: z.boolean().optional(),
   maxTradeAgeHours: z.number().positive().optional(),

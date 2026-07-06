@@ -17,7 +17,7 @@ export const proxyYamlSchema = z
 
 export const globalYamlSchema = z.object({
   poll_interval_ms: z.number().int().min(1000).default(5000),
-  activity_limit: z.number().int().min(10).max(500).default(100),
+  activity_limit: z.number().int().min(10).max(10000).default(100),
   preview_mode: z.boolean().default(true),
   copy_trades_only: z.boolean().default(true),
   max_trade_age_hours: z.number().positive().default(1),

@@ -347,6 +347,8 @@ export function SettingsPage() {
                 activity_limit
                 <input
                   type="number"
+                  min={10}
+                  max={10000}
                   value={form.activityLimit}
                   onChange={(e) => setGlobal("activityLimit", parseInt(e.target.value, 10))}
                 />
