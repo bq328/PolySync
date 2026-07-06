@@ -8,10 +8,17 @@ import { useT } from "../i18n/I18nProvider";
 import { actionBadgeClass, SideBadge } from "../utils/auditDisplay";
 import { StopCopyTradingButton } from "../components/StopCopyTradingButton";
 import { StartCopyTradingButton } from "../components/StartCopyTradingButton";
+import { fetchWalletProfile } from "../api/wallet";
 
 function fmtUsd(n: number) {
   const sign = n >= 0 ? "" : "-";
   return `${sign}$${Math.abs(n).toFixed(2)}`;
+}
+
+function fmtPct(n: number | null) {
+  if (n === null || !Number.isFinite(n)) return "—";
+  const sign = n >= 0 ? "+" : "";
+  return `${sign}${n.toFixed(2)}%`;
 }
 
 function fmtTime(ts: number | null) {
@@ -45,9 +52,30 @@ export function OverviewPage() {
     refetchInterval: 5000,
   });
 
+  const wallet = useQuery({
+    queryKey: ["wallet-profile"],
+    queryFn: fetchWalletProfile,
+    refetchInterval: 15000,
+  });
+
   const s = status.data;
   const today = stats.data?.today;
   const pnl = today?.realizedPnl ?? 0;
+  const portfolio = wallet.data?.portfolio;
+  const walletDataPartial = Boolean(wallet.data?.error);
+  const openValueUsd = walletDataPartial
+    ? (wallet.data?.engine.localExposureUsd ?? null)
+    : (portfolio?.positionsValueUsd ?? null);
+  const openPositionCount = walletDataPartial
+    ? (wallet.data?.engine.localPositionCount ?? null)
+    : (portfolio?.positionCount ?? null);
+  const netPnl = pnl + (walletDataPartial ? 0 : (portfolio?.unrealizedPnl ?? 0));
+  const netBasis = walletDataPartial
+    ? (wallet.data?.engine.localExposureUsd ?? null)
+    : portfolio
+      ? portfolio.totalValueUsd - netPnl
+      : null;
+  const netReturnPct = netBasis && netBasis > 0 ? (netPnl / netBasis) * 100 : null;
 
   return (
     <>
@@ -132,6 +160,26 @@ export function OverviewPage() {
             label={t("overview.realizedPnl")}
             value={fmtUsd(pnl)}
             variant={pnl >= 0 ? "positive" : "negative"}
+          />
+          <DataCard
+            label={t("overview.openValue")}
+            value={openValueUsd === null ? "—" : fmtUsd(openValueUsd)}
+            linkTo="/positions"
+            linkLabel={t("common.view")}
+            hint={walletDataPartial ? t("overview.walletDataPartial") : undefined}
+          />
+          <DataCard
+            label={t("overview.openCount")}
+            value={openPositionCount ?? "—"}
+            linkTo="/positions"
+            linkLabel={t("common.view")}
+            hint={walletDataPartial ? t("overview.walletDataPartial") : undefined}
+          />
+          <DataCard
+            label={t("overview.netReturn")}
+            value={fmtPct(netReturnPct)}
+            variant={netPnl >= 0 ? "positive" : "negative"}
+            hint={walletDataPartial ? t("overview.walletDataPartial") : undefined}
           />
           <DataCard
             label={t("overview.pendingGtc")}
