@@ -12,6 +12,7 @@ import {
   configureLiveConfirm,
   resetKillSwitch,
   setPreviewMode,
+  startCopyTrading,
   stopCopyTrading,
   testProxyConnection,
   testLiveConnection,
@@ -192,6 +193,10 @@ export async function handleApiRequest(
 
   if (path === "/api/copy-trading/stop" && method === "POST") {
     return stopCopyTrading(ctx, actx);
+  }
+
+  if (path === "/api/copy-trading/start" && method === "POST") {
+    return startCopyTrading(ctx, actx);
   }
 
   if (path === "/api/settings/global" && method === "PATCH") {

@@ -558,6 +558,39 @@ export async function stopCopyTrading(
   }
 }
 
+export async function startCopyTrading(
+  root: ApiContext,
+  actx: AccountApiContext
+): Promise<{ status: number; body: unknown }> {
+  try {
+    const normalized = readNormalizedConfigDocument(root.configPath);
+    const next = applyAccountGlobalSettingsPatch(normalized, actx.accountId, {
+      risk: { enableCopyTrading: true },
+    });
+    writeNormalizedConfigDocument(root.configPath, next);
+    await root.reloadConfig();
+    syncAggregateHealth(root.manager.list());
+    logInfo(`Copy trading enabled via dashboard: account=${actx.accountId}`);
+
+    const rt = root.manager.require(actx.accountId);
+    const snapshotCtx = { ...actx, getConfig: () => rt.config };
+    return {
+      status: 200,
+      body: {
+        ok: true,
+        accountId: actx.accountId,
+        previewMode: rt.config.app.global.previewMode,
+        copyTradingEnabled: true,
+        message: "已开启跟单：跟单开关已打开。",
+        risk: buildRiskSnapshot(snapshotCtx),
+      },
+    };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    return { status: 400, body: { error: msg } };
+  }
+}
+
 function formatSettingsError(e: unknown): { status: number; body: unknown } {
   if (e instanceof z.ZodError) {
     return {

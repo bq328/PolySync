@@ -7,6 +7,7 @@ import { OverviewHourlyChart } from "../components/OverviewHourlyChart";
 import { useT } from "../i18n/I18nProvider";
 import { actionBadgeClass, SideBadge } from "../utils/auditDisplay";
 import { StopCopyTradingButton } from "../components/StopCopyTradingButton";
+import { StartCopyTradingButton } from "../components/StartCopyTradingButton";
 
 function fmtUsd(n: number) {
   const sign = n >= 0 ? "" : "-";
@@ -74,11 +75,14 @@ export function OverviewPage() {
         }
         actions={
           s ? (
-            <StopCopyTradingButton
-              previewMode={s.previewMode}
-              copyTradingEnabled={s.copyTradingEnabled}
-              compact
-            />
+            <>
+              <StartCopyTradingButton copyTradingEnabled={s.copyTradingEnabled} compact />
+              <StopCopyTradingButton
+                previewMode={s.previewMode}
+                copyTradingEnabled={s.copyTradingEnabled}
+                compact
+              />
+            </>
           ) : undefined
         }
       />

@@ -244,6 +244,13 @@ export const en: Messages = {
     confirmKillDesc: "Copy trading will resume today (unless daily loss cap triggers again).",
     confirmKillHint: "Confirm the engine is healthy before continuing.",
     confirmKillBtn: "Confirm reset",
+    startCopy: "Start copy trading",
+    startCopyDone: "Copy trading enabled",
+    confirmStartTitle: "Start copy trading",
+    confirmStartDesc:
+      "Enables the copy trading switch. If this account is in Live mode, the engine can place real copy orders again.",
+    confirmStartHint: "Confirm leaders, risk limits, balance, approvals, and Telegram alerts before continuing.",
+    confirmStartBtn: "Confirm start",
     stopCopy: "Stop copy trading",
     stopCopyDone: "Copy trading stopped",
     confirmStopTitle: "Stop copy trading",

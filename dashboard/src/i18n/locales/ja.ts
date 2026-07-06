@@ -245,6 +245,13 @@ export const ja: Messages = {
     confirmKillDesc: "本日のコピー取引が再開されます（日次損失上限が再発動しない場合）。",
     confirmKillHint: "エンジンの状態が正常であることを確認してから続行してください。",
     confirmKillBtn: "リセットを確認",
+    startCopy: "コピー開始",
+    startCopyDone: "コピー取引を有効にしました",
+    confirmStartTitle: "コピー取引を開始",
+    confirmStartDesc:
+      "コピー取引スイッチを有効にします。このアカウントが Live の場合、エンジンは実注文を再開できます。",
+    confirmStartHint: "リーダー、リスク制限、残高、承認、Telegram 通知を確認してから続行してください。",
+    confirmStartBtn: "開始を確認",
     stopCopy: "コピー停止",
     stopCopyDone: "コピー取引を停止しました",
     confirmStopTitle: "コピー取引を停止",

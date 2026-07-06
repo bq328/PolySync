@@ -245,6 +245,13 @@ export const ko: Messages = {
     confirmKillDesc: "오늘 카피 거래가 재개됩니다 (일일 손실 한도가 다시 발동하지 않는 경우).",
     confirmKillHint: "엔진 상태가 정상인지 확인한 후 계속하세요.",
     confirmKillBtn: "재설정 확인",
+    startCopy: "카피 시작",
+    startCopyDone: "카피 거래가 활성화되었습니다",
+    confirmStartTitle: "카피 거래 시작",
+    confirmStartDesc:
+      "카피 거래 스위치를 켭니다. 이 계정이 Live 모드라면 엔진이 실제 카피 주문을 다시 낼 수 있습니다.",
+    confirmStartHint: "리더, 리스크 한도, 잔고, 승인, Telegram 알림을 확인한 후 계속하세요.",
+    confirmStartBtn: "시작 확인",
     stopCopy: "카피 중지",
     stopCopyDone: "카피 거래가 중지되었습니다",
     confirmStopTitle: "카피 거래 중지",

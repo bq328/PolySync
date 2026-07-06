@@ -7,6 +7,7 @@ import { PageHeader } from "../components/ui/PageHeader";
 import { ConfirmModal } from "../components/ui/ConfirmModal";
 import { useToast } from "../components/ui/Toast";
 import { StopCopyTradingButton } from "../components/StopCopyTradingButton";
+import { StartCopyTradingButton } from "../components/StartCopyTradingButton";
 import { useT } from "../i18n/I18nProvider";
 
 function ProgressBar({ value, max, label }: { value: number; max: number; label: string }) {
@@ -103,10 +104,13 @@ export function RiskPage() {
         }
         actions={
           r ? (
-            <StopCopyTradingButton
-              previewMode={r.previewMode}
-              copyTradingEnabled={r.copyTradingEnabled}
-            />
+            <>
+              <StartCopyTradingButton copyTradingEnabled={r.copyTradingEnabled} />
+              <StopCopyTradingButton
+                previewMode={r.previewMode}
+                copyTradingEnabled={r.copyTradingEnabled}
+              />
+            </>
           ) : undefined
         }
       />

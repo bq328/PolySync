@@ -108,6 +108,11 @@ export const stopCopyTrading = () =>
     "/api/copy-trading/stop",
     {}
   );
+export const startCopyTrading = () =>
+  apiPost<{ ok: boolean; previewMode: boolean; copyTradingEnabled: boolean; risk: RiskSnapshot }>(
+    "/api/copy-trading/start",
+    {}
+  );
 export const switchPreviewMode = () =>
   apiPost<{ ok: boolean; previewMode: boolean; message: string }>("/api/mode/preview", {});
 export const switchLiveMode = () =>
