@@ -1,4 +1,4 @@
-# PolyMirror Architecture
+# PolySync Architecture
 
 ## Scope
 

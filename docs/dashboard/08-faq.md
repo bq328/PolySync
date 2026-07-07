@@ -95,7 +95,7 @@
 | 模式 | 数据库路径（典型） |
 |------|-------------------|
 | Preview | `data/preview.db` 或 `data/accounts/{id}/preview.db` |
-| Live | `data/polymirror.db` 或账户子目录 |
+| Live | `data/polysync.db` 或账户子目录 |
 
 ---
 

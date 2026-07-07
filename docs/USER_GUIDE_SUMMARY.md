@@ -157,7 +157,7 @@ SELECT * FROM daily_stats WHERE date = date('now');
 SELECT * FROM positions WHERE shares > 0;
 ```
 
-数据库路径：`data/polymirror.db`
+数据库路径：`data/polysync.db`
 
 ---
 

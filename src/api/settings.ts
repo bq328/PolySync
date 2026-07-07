@@ -490,7 +490,7 @@ export async function setPreviewMode(
         : "";
     const message = preview
       ? `已切换 Preview（引擎已热重载 preview.db）。${flushNote}`.trim()
-      : `已切换 Live（引擎已热重载 polymirror.db）。${migrateNote}请确认钱包 USDC 充足。`.trim();
+      : `已切换 Live（引擎已热重载 polysync.db）。${migrateNote}请确认钱包 USDC 充足。`.trim();
 
     return {
       status: 200,

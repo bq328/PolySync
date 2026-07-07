@@ -64,7 +64,7 @@ Polymarket CLOB 下单脚本
   POLYMARKET_PRIVATE_KEY    签名私钥（L1）
   POLYMARKET_ADDRESS        资金地址 / deposit wallet
   POLYMARKET_API_KEY        可选，CLOB L2 凭证（否则 SDK 自动 derive）
-  POLYMIRROR_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING  实盘安全确认
+  POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING    实盘安全确认
 
 示例:
   # GTC 限价买单：10 份 @ 0.50

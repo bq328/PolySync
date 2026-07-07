@@ -1,4 +1,4 @@
-# PolyMirror Dashboard 前端规划
+# PolySync Dashboard 前端规划
 
 > 版本：草案 v0.1 · 2026-06-24  
 > 状态：规划阶段（v1.0 引擎已就绪，Dashboard 为 v1.1+ 子系统）  
@@ -10,7 +10,7 @@
 
 ### 1.1 Dashboard 是什么
 
-PolyMirror Dashboard 是 **自托管跟单引擎的本地管理控制台**，用于：
+PolySync Dashboard 是 **自托管跟单引擎的本地管理控制台**，用于：
 
 - 可视化运行状态、持仓、审计日志
 - 通过表单管理 Leader / 策略 / 风控（替代手改 `config.yaml`）
@@ -49,7 +49,7 @@ PolyMirror Dashboard 是 **自托管跟单引擎的本地管理控制台**，用
 ### 3.1 推荐方案（与主仓库一致）
 
 ```
-PolyMirror/
+PolySync/
 ├── src/              # 现有 daemon（不变）
 ├── dashboard/        # 新：前端 SPA
 │   ├── package.json
@@ -144,7 +144,7 @@ PolyMirror/
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  PolyMirror   [Preview]   Kill Switch: OFF    uptime 2h 15m │
+│  PolySync   [Preview]   Kill Switch: OFF    uptime 2h 15m │
 ├─────────────────────────────────────────────────────────────┤
 │ ⚠ wallet drift: tok-abc wallet=12 tracked=10                │
 ├──────────┬──────────┬──────────┬──────────┬─────────────────┤

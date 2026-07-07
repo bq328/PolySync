@@ -2,7 +2,7 @@
 
 Complete this checklist in **`preview_mode: true`** before enabling live trading.
 
-Mark each item when done. Keep logs and `data/polymirror.db` for review.
+Mark each item when done. Keep logs and `data/polysync.db` for review.
 
 ---
 
@@ -24,7 +24,7 @@ Mark each item when done. Keep logs and `data/polymirror.db` for review.
 - [ ] No duplicate copies for same leader trade after restart (`seen_trades` works)
 
 ```sql
-sqlite3 data/polymirror.db "SELECT action, COUNT(*) FROM audit_log GROUP BY action;"
+sqlite3 data/polysync.db "SELECT action, COUNT(*) FROM audit_log GROUP BY action;"
 ```
 
 ## Day 3–4 — Sizing & risk

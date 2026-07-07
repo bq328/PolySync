@@ -33,7 +33,7 @@
 
 ### Preview → Live 数据迁移
 
-切换 Live 时引擎会**热重载** `polymirror.db`，并自动合并 Preview DB 中的：
+切换 Live 时引擎会**热重载** `polysync.db`，并自动合并 Preview DB 中的：
 
 | 数据 | 是否迁移 | 说明 |
 |------|----------|------|

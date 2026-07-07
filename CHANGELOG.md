@@ -19,7 +19,7 @@ First stable release — single-platform Polymarket multi-leader copy trading (m
 - Risk gates: daily volume caps, max open markets, slippage tolerance, kill switch
 - Preview mode (default) — dry-run without CLOB orders
 - Live CLOB V2 execution: GTC / FAK / FOK via `@polymarket/clob-client-v2`
-- Live safety gate: `POLYMIRROR_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING`
+- Live safety gate: `POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING`
 - SQLite persistence: positions, audit log, daily stats
 - Trade aggregation window (`trade_aggregation_window_ms`)
 - Telegram notifications (copy / error / kill switch)

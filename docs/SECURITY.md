@@ -1,8 +1,8 @@
-# PolyMirror — Security Notes
+# PolySync — Security Notes
 
 ## Threat model (v1.0)
 
-PolyMirror runs as a long-lived Node process with access to:
+PolySync runs as a long-lived Node process with access to:
 
 - Your Polymarket wallet private key (`.env`)
 - Outbound HTTPS to Polymarket APIs (Data API + CLOB) and optional Telegram
@@ -61,4 +61,4 @@ CI runs `npm audit --audit-level=critical`.
 
 ## Reporting
 
-If you find a security issue in PolyMirror itself, open a private report to the maintainer (do not post private keys in public issues).
+If you find a security issue in PolySync itself, open a private report to the maintainer (do not post private keys in public issues).

@@ -1,6 +1,6 @@
 ## 产品概览
 
-PolyMirror 是运行在本地或 VPS 上的 **Polymarket 跟单引擎**。Dashboard 是它的 **Web 管理控制台**，用于配置 Leader、查看持仓与 PnL、切换 Preview/Live，无需手改 `config.yaml`。
+PolySync 是运行在本地或 VPS 上的 **Polymarket 跟单引擎**。Dashboard 是它的 **Web 管理控制台**，用于配置 Leader、查看持仓与 PnL、切换 Preview/Live，无需手改 `config.yaml`。
 
 ### 核心能力
 

@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { readDbPathOverride } from "../config/env.js";
 
-const LIVE_DB = "data/polymirror.db";
+const LIVE_DB = "data/polysync.db";
 const PREVIEW_DB = "data/preview.db";
 
 /** Preview and live use separate SQLite files so preview runs do not pollute live state. */
@@ -16,7 +16,7 @@ export function resolveAccountDbPath(accountId: string, previewMode: boolean): s
   const override = readDbPathOverride();
   if (override) return override;
 
-  const fileName = previewMode ? "preview.db" : "polymirror.db";
+  const fileName = previewMode ? "preview.db" : "polysync.db";
   const newPath = `data/accounts/${accountId}/${fileName}`;
 
   if (accountId === "default") {

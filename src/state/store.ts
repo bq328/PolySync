@@ -2,7 +2,7 @@ import Database from "better-sqlite3";
 import { mkdirSync, existsSync } from "node:fs";
 import { dirname } from "node:path";
 
-const DEFAULT_DB = "data/polymirror.db";
+const DEFAULT_DB = "data/polysync.db";
 
 export type AuditAction = "DETECT" | "SKIP" | "COPY" | "ERROR";
 

@@ -87,7 +87,7 @@ docker compose logs -f
 Default SQLite files remain under `data/` for compatibility:
 
 - Preview: `data/preview.db`
-- Live: `data/polymirror.db`
+- Live: `data/polysync.db`
 - Multi-account: `data/accounts/<account-id>/...`
 
 Use `POLYSYNC_DB_PATH` only when you intentionally want a custom path.

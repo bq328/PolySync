@@ -82,7 +82,7 @@ export function translateApiMessage(t: TFn, message: string): string {
     return note ? `${t("apiMsg.switchedPreview")} ${note}` : t("apiMsg.switchedPreview");
   }
 
-  const live = message.match(/^已切换 Live（引擎已热重载 polymirror\.db）。(.*)请确认钱包 USDC 充足。$/);
+  const live = message.match(/^已切换 Live（引擎已热重载 polysync\.db）。(.*)请确认钱包 USDC 充足。$/);
   if (live) {
     const middle = live[1] ?? "";
     const migrate = translateMigrateNote(t, middle);

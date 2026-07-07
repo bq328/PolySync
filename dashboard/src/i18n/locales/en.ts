@@ -305,7 +305,7 @@ export const en: Messages = {
     confirmLiveBtn: "Confirm Live",
     confirmLiveP1: "After switching, real funds will be used for Polymarket copy orders. This cannot be undone.",
     confirmLiveLi1: "Set POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING in .env",
-    confirmLiveLi2: "Engine hot-switches to polymirror.db; Preview dedup keys merge into Live DB",
+    confirmLiveLi2: "Engine hot-switches to polysync.db; Preview dedup keys merge into Live DB",
     confirmLiveLi3: "Confirm leaders and risk parameters are configured correctly",
     liveBlocked:
       "Cannot switch to Live: click Configure Live confirm first, or set POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING in .env.",
@@ -543,7 +543,7 @@ export const en: Messages = {
     orderCancelled: "Order cancelled on CLOB and removed from pending list",
     stopCopy: "Copy trading stopped: Preview mode, copy switch off.",
     switchedPreview: "Switched to Preview (engine hot-reloaded preview.db).",
-    switchedLive: "Switched to Live (engine hot-reloaded polymirror.db).",
+    switchedLive: "Switched to Live (engine hot-reloaded polysync.db).",
     confirmUsdc: "Ensure wallet USDC is sufficient.",
     previewMerged: "Merged Preview: {seen} dedup entries, {positions} engine positions (tracking only; on-chain is authoritative).",
     flushResolved: "Reconciled {resolved} Live pending order(s).",

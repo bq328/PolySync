@@ -13,7 +13,7 @@
 ### 首次安装
 
 ```bash
-cd PolyMirror
+cd PolySync
 npm install
 cp .env.example .env
 cp config.preview.template.yaml config.yaml

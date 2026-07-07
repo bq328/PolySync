@@ -1,7 +1,7 @@
 /**
  * Patches @polymarket/client for PolySync deposit-wallet + env CLOB credentials.
  *
- * 1. classifyWalletType — relayer-deployed wallets via globalThis.__POLYMIRROR_RELAYER_WALLETS__
+ * 1. classifyWalletType — relayer-deployed wallets via global marker
  * 2. beginAuthentication — trust .env credentials when L2 fetchApiKeys succeeds (skip includes check)
  */
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
@@ -29,7 +29,9 @@ const CREDENTIALS_MARKER = "POLYMIRROR_TRUST_ENV_CREDENTIALS";
  * and the needles need updating, an operator can set this to unblock installs,
  * but the default is to fail loudly so drift is never silently ignored.
  */
-const ALLOW_UNPATCHED = process.env.POLYMIRROR_ALLOW_UNPATCHED_SDK === "1";
+const ALLOW_UNPATCHED =
+  process.env.POLYSYNC_ALLOW_UNPATCHED_SDK === "1" ||
+  process.env.POLYMIRROR_ALLOW_UNPATCHED_SDK === "1";
 
 class SdkPatchError extends Error {}
 
@@ -51,7 +53,7 @@ function patchOnce(path, label, needle, replacement, appliedMarker) {
       `${label}: patch target not found - @polymarket/client likely changed version. ` +
         `Update the needle in scripts/patch-polymarket-client.mjs to match the new SDK build, ` +
         `then verify the change is still correct. ` +
-        `To bypass intentionally (NOT recommended), set POLYMIRROR_ALLOW_UNPATCHED_SDK=1.`
+        `To bypass intentionally (NOT recommended), set POLYSYNC_ALLOW_UNPATCHED_SDK=1.`
     );
   }
   writeFileSync(path, src.replace(needle, replacement), "utf8");
@@ -79,7 +81,7 @@ function main() {
     if (e instanceof SdkPatchError) {
       const msg = `patch-polymarket-client: ${e.message}`;
       if (ALLOW_UNPATCHED) {
-        console.warn(`${msg}\n(continuing because POLYMIRROR_ALLOW_UNPATCHED_SDK=1)`);
+        console.warn(`${msg}\n(continuing because POLYSYNC_ALLOW_UNPATCHED_SDK=1)`);
         return;
       }
       console.error(msg);

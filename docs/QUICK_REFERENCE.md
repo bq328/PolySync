@@ -1,4 +1,4 @@
-# PolyMirror 速查表
+# PolySync 速查表
 
 > 一页纸参考 · v1.0.0 · 完整说明见 [USER_GUIDE.md](USER_GUIDE.md)
 
@@ -115,7 +115,7 @@ TELEGRAM_CHAT_ID=...
 ## 审计 SQL
 
 ```bash
-sqlite3 data/polymirror.db
+sqlite3 data/polysync.db
 ```
 
 ```sql

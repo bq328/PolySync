@@ -304,7 +304,7 @@ export const zh: Messages = {
     confirmLiveBtn: "确认切换实盘",
     confirmLiveP1: "切换后将使用真实资金在 Polymarket 下单跟单，操作不可撤销。",
     confirmLiveLi1: "需在 .env 设置 POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING",
-    confirmLiveLi2: "引擎热切换到 polymirror.db，模拟去重记录会合并到实盘数据库",
+    confirmLiveLi2: "引擎热切换到 polysync.db，模拟去重记录会合并到实盘数据库",
     confirmLiveLi3: "请确认跟单对象与风控参数已正确配置",
     liveBlocked:
       "无法切换实盘：请先点击「配置实盘确认」，或在 .env 设置 POLYSYNC_LIVE_CONFIRM=I_UNDERSTAND_LIVE_TRADING。",
@@ -544,7 +544,7 @@ export const zh: Messages = {
     orderCancelled: "订单已从 CLOB 撤销并移出 pending 列表",
     stopCopy: "已停止跟单：模拟模式，跟单开关已关闭。",
     switchedPreview: "已切换模拟（引擎已热重载 preview.db）。",
-    switchedLive: "已切换实盘（引擎已热重载 polymirror.db）。",
+    switchedLive: "已切换实盘（引擎已热重载 polysync.db）。",
     confirmUsdc: "请确认钱包 USDC 充足。",
     previewMerged: "已合并模拟记录：{seen} 条去重、{positions} 条引擎持仓（仅跟踪，链上为准）。",
     flushResolved: "已处理 {resolved} 笔实盘挂单。",

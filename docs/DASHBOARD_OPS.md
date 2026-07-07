@@ -1,4 +1,4 @@
-# PolyMirror Dashboard 操作文档
+# PolySync Dashboard 操作文档
 
 > 控制台帮助中心 · 按功能分类 · 与侧边栏页面对应
 

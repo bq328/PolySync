@@ -1,4 +1,4 @@
-# PolyMirror 开发规划
+# PolySync 开发规划
 
 > 版本：v0.1 规划 · 2026-06-24  
 > 状态：Scaffold 已就绪，进入 M1 实现阶段
@@ -9,7 +9,7 @@
 
 ### 1.1 是什么
 
-**PolyMirror** — Polymarket **单平台、多 Leader** 镜像跟单引擎。
+**PolySync** — Polymarket **单平台、多 Leader** 镜像跟单引擎。
 
 - 监听多个 Leader proxy 的 TRADE 活动
 - 按 Leader 独立策略缩放仓位
@@ -27,7 +27,7 @@
 
 ### 1.3 差异化（相对 GitHub 生态）
 
-见 [DEEP_ANALYSIS.md](DEEP_ANALYSIS.md)。PolyMirror 核心差异：
+见 [DEEP_ANALYSIS.md](DEEP_ANALYSIS.md)。PolySync 核心差异：
 
 1. **`@polymarket/clob-client-v2`** — 多数竞品仍用 V1 SDK  
 2. **Preview-first + 供应链安全** — 官方 npm、无密钥外传逻辑  
@@ -249,7 +249,7 @@ docs/RUNBOOK.md
 | `config.yaml` | leaders、风控、执行参数 | ❌（用 template） |
 | `config.example.yaml` | 最小模板 | ✅ |
 | `config.preview.template.yaml` | Preview 完整注释模板 | ✅ |
-| `data/polymirror.db` | SQLite | ❌ |
+| `data/polysync.db` | SQLite | ❌ |
 
 ### 6.2 Leader 配置 schema（摘要）
 
@@ -387,7 +387,7 @@ daily_stats (
 ### 11.1 本地
 
 ```bash
-cd PolyMirror
+cd PolySync
 cp .env.example .env
 cp config.example.yaml config.yaml
 npm install

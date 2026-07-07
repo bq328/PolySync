@@ -31,7 +31,7 @@ Version 1.0.0 - self-hosted Polymarket multi-leader copy trading.
 
 ## Requirements / 环境要求
 
-- Node.js `>=24` or Docker / Node.js `>=24` 或 Docker
+- Node.js `>=20` or Docker / Node.js `>=20` 或 Docker
 - Polymarket proxy wallet and USDC for Live mode / 实盘需要 Polymarket 代理钱包和 USDC
 - Leader proxy wallet addresses or Polymarket usernames / Leader 代理钱包地址或用户名
 - Optional Telegram bot token and chat ID / 可选 Telegram Bot Token 和 Chat ID
@@ -200,6 +200,9 @@ config.preview.template.yaml
 - [Preview checklist / 预览检查清单](docs/PREVIEW_CHECKLIST.md)
 - [Security notes / 安全说明](docs/SECURITY.md)
 - [Architecture / 架构](docs/ARCHITECTURE.md)
+- [Ecosystem workflow / 生态工作流](docs/ECOSYSTEM_WORKFLOW.md)
+- [Web Agent architecture / Web Agent 架构](docs/WEB_AGENT_ARCHITECTURE.md)
+- [Marketing pitch / 推广讲稿](docs/MARKETING_PITCH_10MIN.md)
 - [Dashboard overview / 控制台概览](docs/dashboard/01-overview.md)
 - [Changelog / 更新记录](CHANGELOG.md)
 

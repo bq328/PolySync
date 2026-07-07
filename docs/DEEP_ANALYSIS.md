@@ -31,7 +31,7 @@
 | C | [Joshbazz/polymarket_copy_trader](https://github.com/Joshbazz/polymarket_copy_trader) | **4.5** | 2024-09 停更；结构古老 |
 | ⚠️ | [kppox/polymarket-copy-bot](https://github.com/kppox/polymarket-copy-bot) | **N/A** | **恶意依赖，禁止运行** |
 
-**PolyMirror 定位：** 在 A 档功能模型基础上，以 **V2 SDK + 安全默认 + Preview-first** 补齐生态共性短板。
+**PolySync 定位：** 在 A 档功能模型基础上，以 **V2 SDK + 安全默认 + Preview-first** 补齐生态共性短板。
 
 ---
 
@@ -57,7 +57,7 @@
 
 ## 3. 「完善跟单平台」评估维度
 
-以下 **12 维** 构成满分基准（PolyMirror 目标模型）：
+以下 **12 维** 构成满分基准（PolySync 目标模型）：
 
 | # | 维度 | 权重 | 说明 |
 |---|------|------|------|
@@ -310,13 +310,13 @@ async def _live_fill(...):
 └─────────────────────────────────────────────────────────┘
 ```
 
-**结论：开源生态集中在 L2–L3，L4 需自建（PolyMirror 目标）。**
+**结论：开源生态集中在 L2–L3，L4 需自建（PolySync 目标）。**
 
 ---
 
-## 8. PolyMirror 应对策略
+## 8. PolySync 应对策略
 
-基于本次深入调研，PolyMirror 相对竞品的**差异化优先级**：
+基于本次深入调研，PolySync 相对竞品的**差异化优先级**：
 
 | 优先级 | 能力 | 依据 |
 |--------|------|------|
@@ -334,7 +334,7 @@ async def _live_fill(...):
 
 - kppox 任何依赖或私钥处理
 - gnanam1990 的「Live」宣传（未实现）
-- MongoDB 重栈（shmlkv）— PolyMirror 已选 SQLite
+- MongoDB 重栈（shmlkv）— PolySync 已选 SQLite
 
 ---
 
@@ -351,7 +351,7 @@ async def _live_fill(...):
 ## 10. 相关文档
 
 - [功能清单（第一次调研）](FEATURES_SURVEY.md)
-- [PolyMirror 架构](ARCHITECTURE.md)
+- [PolySync 架构](ARCHITECTURE.md)
 
 ---
 
@@ -363,4 +363,4 @@ async def _live_fill(...):
 | 哪个最接近？ | **polycopy / Polybot / shmlkv**（功能），**TradeSEB**（赎回+WS） |
 | 最大共同问题？ | **V2 SDK 滞后 + 安全 + 测试缺失** |
 | README 可信吗？ | **不可全信** — gnanam1990 等存在「宣传 Live、代码 TODO」 |
-| PolyMirror 应做什么？ | **L3→L4**：V2 + 安全 + 多 Leader 风控，不重复 scam 生态 |
+| PolySync 应做什么？ | **L3→L4**：V2 + 安全 + 多 Leader 风控，不重复 scam 生态 |

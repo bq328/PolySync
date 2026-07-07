@@ -29,7 +29,7 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=24"
+    "node": ">=20"
   },
   "dependencies": {
     "@ethersproject/wallet": "^5.7.0",

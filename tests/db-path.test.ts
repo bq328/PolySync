@@ -30,7 +30,7 @@ describe("resolveDbPath", () => {
   });
 
   it("uses live db when not preview", () => {
-    expect(resolveDbPath(false)).toBe("data/polymirror.db");
+    expect(resolveDbPath(false)).toBe("data/polysync.db");
   });
 
   it("uses POLYSYNC_DB_PATH override", () => {

@@ -141,7 +141,7 @@ Docker Compose 会把 `HEALTH_BIND` 设置为 `0.0.0.0` 以便端口映射。公
 | 模式 | 默认路径 |
 |------|----------|
 | Preview | `data/preview.db` |
-| Live | `data/polymirror.db` |
+| Live | `data/polysync.db` |
 | 多账户 | `data/accounts/<account-id>/...` |
 
 自定义路径：

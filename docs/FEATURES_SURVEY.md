@@ -1,7 +1,7 @@
 # Polymarket 跟单软件功能调研
 
-> GitHub 开源 Polymarket copy-trading bot 功能提取与 PolyMirror 采纳建议  
-> 调研日期：2026-06-24  
+> GitHub 开源 Polymarket copy-trading bot 功能提取与 PolySync 采纳建议
+> 调研日期：2026-06-24
 > 检索关键词：`polymarket copy`、`polymarket copy trading`、`polymarket copytrading`
 
 ---
@@ -65,7 +65,7 @@ GitHub 搜索入口：
 
 ## 3. 功能总表（从源码提取）
 
-以下按 **模块** 归纳各仓库中**合理且技术上可行**的功能。  
+以下按 **模块** 归纳各仓库中**合理且技术上可行**的功能。
 列「出现项目」表示在抽样源码/README 中明确存在，而非猜测。
 
 ### 3.1 目标与监听（Leader / Monitor）
@@ -74,13 +74,13 @@ GitHub 搜索入口：
 |------|------|----------|
 | 单 Leader proxy 地址跟单 | `COPY_TARGET_USER` / `TARGET_WALLET` | kppox, TradeSEB, devdasx |
 | **多 Leader 并行** | 逗号/JSON 数组配置多个地址 | polycopy, shmlkv, Polybot, gnanam1990 |
-| Leader 别名 / ID | 便于配置与日志 | duola, PolyMirror |
+| Leader 别名 / ID | 便于配置与日志 | duola, PolySync |
 | 用户名 → proxy 解析 | 爬 Polymarket 页面 `__NEXT_DATA__` | kppox |
 | Profile URL / 用户名添加 | Dashboard 输入 URL 或 username | gnanam1990 |
 | Data API 轮询 activity | `GET /activity?user=&type=TRADE` | 绝大多数 |
 | 轮询间隔可配 | 1s–15s | polycopy, Polybot, kppox |
 | 活动条数 limit | 10–500 | kppox, polycopy |
-| 忽略过旧成交 | `TOO_OLD_TIMESTAMP` / max age hours | polycopy, PolyMirror |
+| 忽略过旧成交 | `TOO_OLD_TIMESTAMP` / max age hours | polycopy, PolySync |
 | 只跟 TRADE 类型 | 忽略 REDEEM/SPLIT/MERGE | kppox, polycopy |
 | **WebSocket 实时监听** | 低于秒级延迟 | TradeSEB, Predict-Org, taetaehoho |
 | WS 断线重连 + 指数退避 | 生产必备 | TradeSEB |
@@ -93,11 +93,11 @@ GitHub 搜索入口：
 | 功能 | 说明 | 出现项目 |
 |------|------|----------|
 | txHash + asset + side 去重 | 防重复下单 | kppox, TradeSEB, polycopy |
-| 无 tx 时用 timestamp 去重 | 降级 key | kppox, PolyMirror |
-| seen 集合持久化 | 重启不重复跟旧单 | polycopy (NeDB), PolyMirror (SQLite) |
+| 无 tx 时用 timestamp 去重 | 降级 key | kppox, PolySync |
+| seen 集合持久化 | 重启不重复跟旧单 | polycopy (NeDB), PolySync (SQLite) |
 | BUY 短窗口去重 | 30s 内同 trader 同 market | Polybot |
 | 同 market+side 时间 dedup | 防 partial fill 重复 | gnanam1990 |
-| 持仓本地跟踪 | leader_id + token → shares | polycopy, Polybot, PolyMirror |
+| 持仓本地跟踪 | leader_id + token → shares | polycopy, Polybot, PolySync |
 | Crash recovery | 磁盘状态恢复 | Polybot |
 | Position reconciliation | 定期与链上/API 对账 | Polybot |
 
@@ -145,7 +145,7 @@ GitHub 搜索入口：
 | neg_risk 市场支持 | CLOB negRisk 参数 | TradeSEB, Predict-Org |
 | 跟 BUY | 标准路径 | 全部 |
 | **跟 SELL / 镜像减仓** | leader 卖则跟卖 | polycopy, Polybot, TradeSEB |
-| SELL 余额校验 | 防 oversell | TradeSEB, Polybot, PolyMirror |
+| SELL 余额校验 | 防 oversell | TradeSEB, Polybot, PolySync |
 | COPY_SELLS 开关 | 仅跟买 | Polybot |
 | 订单重试 + 指数退避 | 网络/CLOB 失败 | polycopy, Polybot |
 | **FAK 失败重提交** | 加价追单、多档 attempt | taetaehoho |
@@ -159,7 +159,7 @@ GitHub 搜索入口：
 
 | 功能 | 说明 | 出现项目 |
 |------|------|----------|
-| **Preview / Dry-run** | 只记录不下单 | polycopy, Polybot, PolyMirror |
+| **Preview / Dry-run** | 只记录不下单 | polycopy, Polybot, PolySync |
 | Paper trading 模拟 | 滑点/gas/FOK 拒绝 | gnanam1990, huahuajhu |
 | **Kill Switch / 日亏损上限** | `DAILY_LOSS_CAP_PCT` | polycopy |
 | 日亏损 USD 上限 | DAILY_LOSS_LIMIT | Polybot |
@@ -169,7 +169,7 @@ GitHub 搜索入口：
 | **Trailing Stop** | 从峰值回撤卖出 | Polybot |
 | 最大持仓时间 | MAX_HOLD_TIME_HOURS | Polybot |
 | **Circuit breaker** | 大单+深度不足暂停 | taetaehoho |
-| 冲突信号策略 | first / skip / majority / priority | Polybot, PolyMirror |
+| 冲突信号策略 | first / skip / majority / priority | Polybot, PolySync |
 
 ### 3.7 结算与链上
 
@@ -225,9 +225,9 @@ GitHub 搜索入口：
 
 ---
 
-## 5. PolyMirror 功能采纳路线图
+## 5. PolySync 功能采纳路线图
 
-基于调研，建议 PolyMirror（单平台多 Leader）按优先级实现：
+基于调研，建议 PolySync（单平台多 Leader）按优先级实现：
 
 ### P0 — MVP（必须有）
 
@@ -303,7 +303,7 @@ GitHub 搜索入口：
 | `STOP_LOSS_PERCENT` | 止损 | -25 | Polybot |
 | `COPY_SELLS` | 是否跟卖 | true | Polybot |
 
-PolyMirror 当前配置见 [`config.example.yaml`](../config.example.yaml)。
+PolySync 当前配置见 [`config.example.yaml`](../config.example.yaml)。
 
 ---
 
@@ -312,8 +312,8 @@ PolyMirror 当前配置见 [`config.example.yaml`](../config.example.yaml)。
 1. GitHub 上 Polymarket 跟单 bot **数量多、质量参差**，功能高度收敛到「监听 → 缩放 → 风控 → CLOB 下单」。
 2. **多 Leader、sizing 策略、Preview、去重、SELL 校验** 是共识性的合理功能。
 3. **Web UI、Telegram、Kill Switch、Trade Aggregation、Tiered multipliers** 是成熟项目的差异化功能。
-4. **Rust 项目**（taetaehoho）在 **WS + FAK 重试 + Circuit breaker** 上领先，适合 PolyMirror 后期借鉴。
-5. **duola** 在 **CLI + backtest + autopilot** 工作流上最完整，适合 PolyMirror 运维工具参考。
+4. **Rust 项目**（taetaehoho）在 **WS + FAK 重试 + Circuit breaker** 上领先，适合 PolySync 后期借鉴。
+5. **duola** 在 **CLI + backtest + autopilot** 工作流上最完整，适合 PolySync 运维工具参考。
 6. 采纳功能时必须 **跳过恶意仓库的依赖与私钥处理代码**，仅参考架构与配置设计。
 
 ---
